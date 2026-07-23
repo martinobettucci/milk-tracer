@@ -10,7 +10,8 @@
     "preview": "vite preview --port 4173",
     "lint": "eslint .",
     "test:e2e": "playwright test",
-    "screenshots": "playwright test tests/screenshots.spec.ts"
+    "screenshots": "playwright test tests/screenshots.spec.ts",
+    "wizard:shots": "node scripts/wizard-shots.mjs"
   },
   "dependencies": {
     "date-fns": "^3.6.0",

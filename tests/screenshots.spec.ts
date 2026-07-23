@@ -3,6 +3,12 @@ import { SEED_FN } from './seed'
 
 const SHOT_DIR = 'screenshots'
 
+// Suppress the first-launch onboarding wizard for every test except the one
+// that exercises it (it opens the wizard explicitly via the Guide button).
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('milk-tracer-onboarded', '1'))
+})
+
 async function seed(page: Page) {
   await page.addInitScript(`window.__SEED__ = ${SEED_FN}`)
   await page.goto('/')
@@ -163,4 +169,20 @@ test('14 data panel — safety timer setting', async ({ page }) => {
   await expect(page.getByTestId('timer-90')).toBeVisible()
   await page.getByTestId('timer-90').click()
   await page.screenshot({ path: `${SHOT_DIR}/14-data-timer.png`, fullPage: true })
+})
+
+test('15 onboarding wizard', async ({ page }) => {
+  await seed(page)
+  await page.getByTestId('nav-guide').click()
+  await expect(page.getByTestId('wizard')).toBeVisible()
+  await page.waitForTimeout(400)
+  await page.screenshot({ path: `${SHOT_DIR}/15a-wizard-welcome.png`, fullPage: true })
+  // advance to a functionality slide (real screenshot + artwork badge)
+  await page.getByTestId('wizard-next').click()
+  await page.waitForTimeout(400)
+  await page.screenshot({ path: `${SHOT_DIR}/15b-wizard-log.png`, fullPage: true })
+  await page.getByTestId('wizard-next').click()
+  await page.getByTestId('wizard-next').click()
+  await page.waitForTimeout(400)
+  await page.screenshot({ path: `${SHOT_DIR}/15c-wizard-timer.png`, fullPage: true })
 })

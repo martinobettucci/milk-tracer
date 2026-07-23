@@ -50,7 +50,7 @@ export default function Dashboard({ feeds, now, timerMin, onGoLog }: Props) {
       <ActiveBottleCard feeds={feeds} timerMin={timerMin} />
 
       {hasBottle && (
-        <>
+        <div className="space-y-4" data-testid="dash-top">
           {/* KPI grid */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <StatCard label={`${t('drunk')} · ${t('today')}`} value={fmtNum(today.drunk, locale)} unit={t('ml')} accent="milk" icon="🍼" />
@@ -80,7 +80,7 @@ export default function Dashboard({ feeds, now, timerMin, onGoLog }: Props) {
             <StatCard label={t('totalDrunk')} value={fmtNum(all.drunk, locale)} unit={t('ml')} accent="green" />
             <StatCard label={t('wasted')} value={fmtNum(all.wasted, locale)} unit={t('ml')} accent="amber" />
           </div>
-        </>
+        </div>
       )}
 
       <BreastSection feeds={feeds} now={now} />

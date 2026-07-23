@@ -40,6 +40,13 @@ const webp = [
   { src: 'bottle-big.png', out: 'art/bottle-big.webp', w: 320, h: 320, q: 0.9 },
   { src: 'breast.png', out: 'art/breast.webp', w: 320, h: 320, q: 0.9 },
   { src: 'bg-pattern.png', out: 'art/bg-pattern.webp', w: 640, h: 960, q: 0.8 },
+  { src: 'wiz-welcome.png', out: 'art/wiz-welcome.webp', w: 480, h: 480, q: 0.85 },
+  { src: 'wiz-analytics.png', out: 'art/wiz-analytics.webp', w: 320, h: 320, q: 0.9 },
+  { src: 'wiz-offline.png', out: 'art/wiz-offline.webp', w: 480, h: 480, q: 0.85 },
+  { src: 'guide-icon.png', out: 'art/guide-icon.webp', w: 128, h: 128, q: 0.9 },
+  { src: 'nav-log.png', out: 'art/nav-log.webp', w: 96, h: 96, q: 0.9 },
+  { src: 'nav-stats.png', out: 'art/nav-stats.webp', w: 96, h: 96, q: 0.9 },
+  { src: 'nav-data.png', out: 'art/nav-data.webp', w: 96, h: 96, q: 0.9 },
 ]
 for (const j of webp) {
   const buf = await convert(resolve(ART, j.src), j.w, j.h, 'image/webp', j.q)

@@ -7,14 +7,17 @@ import { DEFAULT_TIMER_MIN } from './lib/presets'
 import LogFeed from './components/LogFeed'
 import Dashboard from './components/Dashboard'
 import DataPanel from './components/DataPanel'
+import Wizard from './components/Wizard'
 
 type Tab = 'log' | 'stats' | 'data'
+const ONBOARDED_KEY = 'milk-tracer-onboarded'
 
 export default function App() {
   const { t } = useI18n()
   const { pref, setTheme } = useTheme()
   const [tab, setTab] = useState<Tab>('stats')
   const [now, setNow] = useState(() => Date.now())
+  const [wizardOpen, setWizardOpen] = useState(false)
 
   const feeds = useLiveQuery(() => db.feeds.toArray(), [], [])
   const timerSetting = useLiveQuery(() => db.settings.get('bottleTimerMin'), [])
@@ -27,10 +30,20 @@ export default function App() {
     return () => clearInterval(id)
   }, [])
 
+  // Show the onboarding wizard on first launch.
+  useEffect(() => {
+    if (!localStorage.getItem(ONBOARDED_KEY)) setWizardOpen(true)
+  }, [])
+
+  const closeWizard = () => {
+    localStorage.setItem(ONBOARDED_KEY, '1')
+    setWizardOpen(false)
+  }
+
   const tabs: { key: Tab; icon: string }[] = [
-    { key: 'log', icon: '➕' },
-    { key: 'stats', icon: '📈' },
-    { key: 'data', icon: '⚙️' },
+    { key: 'log', icon: '/art/nav-log.webp' },
+    { key: 'stats', icon: '/art/nav-stats.webp' },
+    { key: 'data', icon: '/art/nav-data.webp' },
   ]
   const tabLabel = (k: Tab) => t(k === 'log' ? 'nav_log' : k === 'stats' ? 'nav_stats' : 'nav_data')
 
@@ -56,6 +69,19 @@ export default function App() {
         {tab === 'data' && (
           <DataPanel themePref={pref} setTheme={setTheme} timerMin={timerMin} setTimerMin={setTimerMin} now={now} />
         )}
+
+        {/* Studio credit */}
+        <footer className="mx-auto mt-8 max-w-3xl text-center text-xs text-stone-400">
+          Made with <span className="text-rose-400">❤</span> and proudly with AI by{' '}
+          <a
+            href="https://p2enjoy.studio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-milk-600 hover:underline dark:text-milk-300"
+          >
+            P2Enjoy Studio
+          </a>
+        </footer>
       </main>
 
       {/* Bottom nav */}
@@ -65,19 +91,34 @@ export default function App() {
             <button
               key={tb.key}
               onClick={() => setTab(tb.key)}
-              className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition ${
+              className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-xs font-semibold transition ${
                 tab === tb.key
                   ? 'text-milk-600 dark:text-milk-300'
                   : 'text-stone-400 hover:text-stone-600 dark:hover:text-stone-200'
               }`}
               data-testid={`nav-${tb.key}`}
             >
-              <span className="text-lg">{tb.icon}</span>
+              <img
+                src={tb.icon}
+                alt=""
+                className={`h-7 w-7 object-contain transition ${tab === tb.key ? '' : 'opacity-60 grayscale'}`}
+              />
               {tabLabel(tb.key)}
             </button>
           ))}
+          {/* Guide / onboarding — artwork icon, no emoji */}
+          <button
+            onClick={() => setWizardOpen(true)}
+            className="flex flex-1 flex-col items-center gap-0.5 py-2 text-xs font-semibold text-stone-400 transition hover:text-stone-600 dark:hover:text-stone-200"
+            data-testid="nav-guide"
+          >
+            <img src="/art/guide-icon.webp" alt="" className="h-7 w-7 object-contain opacity-60" />
+            {t('wiz_guide')}
+          </button>
         </div>
       </nav>
+
+      {wizardOpen && <Wizard onClose={closeWizard} />}
     </div>
   )
 }

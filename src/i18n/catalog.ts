@@ -28,6 +28,10 @@ export type StringKey =
   | 'ab_title' | 'ab_safeFor' | 'ab_expiresIn' | 'ab_expired' | 'ab_remaining'
   | 'ab_drankRest' | 'ab_reclaim' | 'ab_giveBack' | 'ab_nothingLeft' | 'ab_fresh'
   | 'data_timer' | 'data_timerHint'
+  // onboarding wizard
+  | 'wiz_guide' | 'wiz_skip' | 'wiz_back' | 'wiz_next' | 'wiz_done'
+  | 'wiz1_t' | 'wiz1_b' | 'wiz2_t' | 'wiz2_b' | 'wiz3_t' | 'wiz3_b'
+  | 'wiz4_t' | 'wiz4_b' | 'wiz5_t' | 'wiz5_b' | 'wiz6_t' | 'wiz6_b'
 
 export type Catalog = Record<StringKey, string>
 
@@ -83,6 +87,19 @@ const en: Catalog = {
   ab_giveBack: 'Give the rest back', ab_nothingLeft: 'All drunk — no waste!',
   ab_fresh: 'Still fresh', data_timer: 'Bottle safety timer',
   data_timerHint: 'How long a prepared bottle stays safe to drink after a feed.',
+  wiz_guide: 'Guide', wiz_skip: 'Skip', wiz_back: 'Back', wiz_next: 'Next', wiz_done: 'Get started',
+  wiz1_t: 'Welcome to Milk Tracer',
+  wiz1_b: 'Your cozy, private helper to track every feed — bottle or breast — and waste less milk. No account, everything stays on your device.',
+  wiz2_t: 'Log a feed in a few taps',
+  wiz2_b: 'Pick a small or big bottle, choose the size, then how much your baby drank. Quick enough for one hand at the crib.',
+  wiz3_t: 'Breastfeeding too',
+  wiz3_b: 'Choose the side and the duration in 15-minute slots. Milk Tracer tracks your average session and your left–right balance.',
+  wiz4_t: 'Keep the milk fresh',
+  wiz4_b: 'A safety timer counts down from your last bottle. Baby drank a little more? Give the leftover back before it expires — it counts as drunk instead of wasted.',
+  wiz5_t: 'Beautiful insights',
+  wiz5_b: 'Daily totals, averages, waste rate, feeding-by-hour patterns and a smart suggestion for the next bottle size.',
+  wiz6_t: 'Private & multilingual',
+  wiz6_b: 'Works offline, installs to your home screen, speaks 24 EU languages and has a gentle dark mode. Your data never leaves your device.',
 }
 
 const fr: Partial<Catalog> = {
@@ -122,6 +139,19 @@ const fr: Partial<Catalog> = {
   ab_giveBack: 'Redonner le reste', ab_nothingLeft: 'Tout bu — aucun gaspillage !',
   ab_fresh: 'Encore frais', data_timer: 'Minuteur de sécurité biberon',
   data_timerHint: 'Durée pendant laquelle un biberon préparé reste bon après une tétée.',
+  wiz_guide: 'Guide', wiz_skip: 'Passer', wiz_back: 'Retour', wiz_next: 'Suivant', wiz_done: 'Commencer',
+  wiz1_t: 'Bienvenue sur Milk Tracer',
+  wiz1_b: 'Votre aide douce et privée pour suivre chaque repas — biberon ou sein — et gaspiller moins de lait. Sans compte, tout reste sur votre appareil.',
+  wiz2_t: 'Enregistrez en quelques touches',
+  wiz2_b: 'Choisissez un petit ou grand biberon, la taille, puis la quantité bue. Assez rapide à une main près du berceau.',
+  wiz3_t: 'L’allaitement aussi',
+  wiz3_b: 'Choisissez le sein et la durée par tranches de 15 minutes. Milk Tracer suit votre moyenne par tétée et l’équilibre gauche–droite.',
+  wiz4_t: 'Gardez le lait frais',
+  wiz4_b: 'Un minuteur de sécurité décompte depuis le dernier biberon. Bébé a repris un peu ? Rendez le reste avant expiration — il compte comme bu, pas gaspillé.',
+  wiz5_t: 'De jolies statistiques',
+  wiz5_b: 'Totaux journaliers, moyennes, taux de gaspillage, rythme par heure et une suggestion futée pour le prochain biberon.',
+  wiz6_t: 'Privé et multilingue',
+  wiz6_b: 'Fonctionne hors ligne, s’installe sur l’écran d’accueil, parle 24 langues de l’UE et propose un mode sombre. Vos données ne quittent jamais l’appareil.',
 }
 
 const it: Partial<Catalog> = {
@@ -161,6 +191,19 @@ const it: Partial<Catalog> = {
   ab_giveBack: 'Ridai il resto', ab_nothingLeft: 'Tutto bevuto — nessuno spreco!',
   ab_fresh: 'Ancora fresco', data_timer: 'Timer di sicurezza biberon',
   data_timerHint: 'Per quanto tempo un biberon preparato resta sicuro dopo una poppata.',
+  wiz_guide: 'Guida', wiz_skip: 'Salta', wiz_back: 'Indietro', wiz_next: 'Avanti', wiz_done: 'Inizia',
+  wiz1_t: 'Benvenuto in Milk Tracer',
+  wiz1_b: 'Il tuo aiuto tenero e privato per registrare ogni pasto — biberon o seno — e sprecare meno latte. Nessun account, tutto resta sul tuo dispositivo.',
+  wiz2_t: 'Registra in pochi tocchi',
+  wiz2_b: 'Scegli un biberon piccolo o grande, la misura e quanto ha bevuto il bimbo. Veloce anche con una mano vicino alla culla.',
+  wiz3_t: 'Anche l’allattamento',
+  wiz3_b: 'Scegli il seno e la durata in blocchi da 15 minuti. Milk Tracer calcola la media per poppata e l’equilibrio sinistra–destra.',
+  wiz4_t: 'Mantieni il latte fresco',
+  wiz4_b: 'Un timer di sicurezza conta dal biberon più recente. Il bimbo ha bevuto ancora un po’? Ridai il resto prima della scadenza — conta come bevuto, non sprecato.',
+  wiz5_t: 'Statistiche bellissime',
+  wiz5_b: 'Totali giornalieri, medie, tasso di spreco, ritmo per ora e un suggerimento intelligente per il prossimo biberon.',
+  wiz6_t: 'Privato e multilingue',
+  wiz6_b: 'Funziona offline, si installa sulla home, parla 24 lingue UE e ha una modalità scura. I tuoi dati non lasciano mai il dispositivo.',
 }
 
 const de: Partial<Catalog> = {

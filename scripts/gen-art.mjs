@@ -60,6 +60,50 @@ const JOBS = [
     transparent: false,
     prompt: `App icon: a single cute baby milk bottle centered on a warm cream to peach radial gradient background, rounded, soft, glowing. ${COZY}. Bold, simple, recognizable at small sizes, generous margins.`,
   },
+  // --- onboarding wizard artworks ---
+  {
+    file: 'wiz-welcome.png',
+    size: '1024x1024',
+    transparent: true,
+    prompt: `A warm welcoming scene: a gentle parent tenderly holding a happy newborn baby, with a cute milk bottle and a little heart floating nearby. Wholesome, loving, cozy. ${COZY}. ${ISOLATE}.`,
+  },
+  {
+    file: 'wiz-analytics.png',
+    size: '1024x1024',
+    transparent: true,
+    prompt: `A cute cozy illustration of a friendly bar chart and a pie chart and a little upward line graph made of soft rounded blocks, with a tiny magnifying glass, conveying gentle insights and analytics. ${COZY}. ${ISOLATE}.`,
+  },
+  {
+    file: 'wiz-offline.png',
+    size: '1024x1024',
+    transparent: true,
+    prompt: `A cozy smartphone showing a little baby bottle on screen, wrapped by a soft protective heart and a small shield, conveying private, offline, safe-on-your-device. ${COZY}. ${ISOLATE}.`,
+  },
+  {
+    file: 'guide-icon.png',
+    size: '1024x1024',
+    transparent: true,
+    prompt: `A simple cute icon of an open guide book with a little glowing lightbulb and a heart above it, conveying help and a friendly tutorial. ${COZY}. ${ISOLATE}.`,
+  },
+  // --- bottom-bar navigation icons (no emoji) ---
+  {
+    file: 'nav-log.png',
+    size: '1024x1024',
+    transparent: true,
+    prompt: `A simple bold cute icon: a rounded plus sign made of soft peach jelly with a tiny milk drop, meaning "add a feed". Centered, minimal, flat. ${COZY}. ${ISOLATE}.`,
+  },
+  {
+    file: 'nav-stats.png',
+    size: '1024x1024',
+    transparent: true,
+    prompt: `A simple bold cute icon: three little rounded bar-chart columns in warm peach and coral with a tiny upward spark, meaning "stats". Centered, minimal, flat. ${COZY}. ${ISOLATE}.`,
+  },
+  {
+    file: 'nav-data.png',
+    size: '1024x1024',
+    transparent: true,
+    prompt: `A simple bold cute icon: a rounded soft gear/cog with a tiny heart in the middle, meaning "settings". Warm peach and coral. Centered, minimal, flat. ${COZY}. ${ISOLATE}.`,
+  },
 ]
 
 // Optional CLI filter: `node gen-art.mjs empty-hero.png bottle-small.png`
