@@ -7,8 +7,10 @@ interface Slide {
   body: StringKey
   // Hero artwork (AI illustration). Used big on intro/outro, as a badge otherwise.
   art: string
-  // Optional real in-app screenshot shown for a functionality slide.
+  // Optional real in-app screenshot (or animated GIF) for a functionality slide.
   shot?: string
+  // Render the shot in a fixed square frame (used for the animated stats tour).
+  square?: boolean
 }
 
 const SLIDES: Slide[] = [
@@ -16,7 +18,7 @@ const SLIDES: Slide[] = [
   { title: 'wiz2_t', body: 'wiz2_b', art: '/art/bottle-small.webp', shot: '/wizard/shot-log.webp' },
   { title: 'wiz3_t', body: 'wiz3_b', art: '/art/breast.webp', shot: '/wizard/shot-breast.webp' },
   { title: 'wiz4_t', body: 'wiz4_b', art: '/art/bottle-big.webp', shot: '/wizard/shot-timer.webp' },
-  { title: 'wiz5_t', body: 'wiz5_b', art: '/art/wiz-analytics.webp', shot: '/wizard/shot-dashboard.webp' },
+  { title: 'wiz5_t', body: 'wiz5_b', art: '/art/wiz-analytics.webp', shot: '/wizard/insights.gif', square: true },
   { title: 'wiz6_t', body: 'wiz6_b', art: '/art/wiz-offline.webp' },
 ]
 
@@ -68,11 +70,19 @@ export default function Wizard({ onClose }: { onClose: () => void }) {
                 className="h-16 w-16 shrink-0 object-contain drop-shadow-sm"
               />
               <div className="w-full overflow-hidden rounded-2xl bg-cream-100 p-2 ring-1 ring-cream-200 dark:bg-cream-950 dark:ring-white/5">
-                <img
-                  src={slide.shot}
-                  alt=""
-                  className="mx-auto max-h-64 w-full rounded-xl object-contain"
-                />
+                {slide.square ? (
+                  <img
+                    src={slide.shot}
+                    alt=""
+                    className="mx-auto aspect-square w-64 max-w-full rounded-xl object-cover"
+                  />
+                ) : (
+                  <img
+                    src={slide.shot}
+                    alt=""
+                    className="mx-auto max-h-64 w-full rounded-xl object-contain"
+                  />
+                )}
               </div>
             </>
           )}

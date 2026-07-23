@@ -79,7 +79,7 @@ await shot(
   'step-duration',
 )
 await shot('shot-timer', async () => { await page.getByTestId('nav-stats').click() }, 'active-bottle')
-await shot('shot-dashboard', async () => { await page.getByTestId('nav-stats').click() }, 'dash-top')
+// The insights slide uses an animated square tour (scripts/wizard-insights-gif.mjs).
 
 await browser.close()
 console.log('done')

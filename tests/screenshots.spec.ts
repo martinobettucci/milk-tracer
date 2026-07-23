@@ -186,4 +186,8 @@ test('15 onboarding wizard', async ({ page }) => {
   await page.getByTestId('wizard-next').click()
   await page.waitForTimeout(400)
   await page.screenshot({ path: `${SHOT_DIR}/15c-wizard-timer.png`, fullPage: true })
+  // insights slide — the square animated stats tour
+  await page.getByTestId('wizard-next').click()
+  await page.waitForTimeout(500)
+  await page.screenshot({ path: `${SHOT_DIR}/15d-wizard-insights.png`, fullPage: true })
 })

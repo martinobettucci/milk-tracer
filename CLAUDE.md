@@ -17,6 +17,8 @@ generate artwork instead** and reference the optimized WebP under `public/art/`.
 - `scripts/gen-art.mjs` → `art-src/*.png` (raw, git-ignored; needs `OPENAI_KEY`).
 - `scripts/optimize-art.mjs` → `public/art/*.webp` + PWA icons (committed).
 - `scripts/wizard-shots.mjs` → `public/wizard/*.webp` real in-app screenshots.
+- `scripts/wizard-insights-gif.mjs` → `public/wizard/insights.gif` — a square,
+  looping scroll tour of the stats dashboard (the wizard "insights" slide).
 
 ## Onboarding wizard — KEEP SCREENSHOTS CURRENT
 `src/components/Wizard.tsx` shows a first-launch tour (re-openable via the "Guide"
@@ -31,6 +33,7 @@ tour never shows stale UI:**
 npm run build
 npm run preview &            # serve the fresh build
 npm run wizard:shots         # rewrites public/wizard/*.webp
+npm run wizard:gif           # rewrites public/wizard/insights.gif (square stats tour)
 kill %1
 ```
 
