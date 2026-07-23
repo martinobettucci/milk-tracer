@@ -36,7 +36,8 @@ export default function LogFeed({ now, onLogged }: Props) {
   }
 
   const saveBottle = async () => {
-    if (!choice || choice === 'breast' || !sizeMl || !fraction) return
+    // fraction can be 0 (prepared but nothing drunk), so guard on null, not falsy.
+    if (!choice || choice === 'breast' || !sizeMl || fraction === null) return
     await addBottleFeed({ timestamp: when, bottleType: choice, sizeMl, fraction })
     setStep('done')
     onLogged?.()
@@ -131,18 +132,19 @@ export default function LogFeed({ now, onLogged }: Props) {
           <p className="text-center text-sm text-stone-400">
             {t('log_size')}: {sizeMl} {t('ml')}
           </p>
-          <div className="grid grid-cols-2 gap-3">
+          {/* empty → full scale, incl. 0/4 (prepared but nothing drunk) */}
+          <div className="grid grid-cols-5 gap-2">
             {FRACTIONS.map((f) => (
               <button
                 key={f.value}
-                className={`chip py-5 ${fraction === f.value ? 'chip-active' : ''}`}
+                className={`chip px-1 py-3 ${fraction === f.value ? 'chip-active' : ''}`}
                 onClick={() => setFraction(f.value)}
                 data-testid={`fraction-${f.label.replace('/', '-')}`}
               >
                 <FractionGlyph value={f.value} />
-                <span className="mt-2 text-lg">{f.label}</span>
-                <span className="text-xs font-normal text-stone-400">
-                  {drunkMl(sizeMl, f.value)} {t('ml')}
+                <span className="mt-1.5 text-base">{f.label}</span>
+                <span className="text-[10px] font-normal leading-tight text-stone-400">
+                  {drunkMl(sizeMl, f.value)}
                 </span>
               </button>
             ))}
@@ -156,7 +158,7 @@ export default function LogFeed({ now, onLogged }: Props) {
             </button>
             <button
               className="btn-primary flex-1"
-              disabled={!fraction}
+              disabled={fraction === null}
               onClick={saveBottle}
               data-testid="save-feed"
             >

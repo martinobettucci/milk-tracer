@@ -2,7 +2,7 @@
 // bottle safety-timer choices used when logging a feed.
 
 export type BottleType = 'small' | 'big'
-export type Fraction = 0.25 | 0.5 | 0.75 | 1
+export type Fraction = 0 | 0.25 | 0.5 | 0.75 | 1
 export type MealKind = 'bottle' | 'breast'
 export type BreastSide = 'left' | 'right'
 
@@ -12,6 +12,7 @@ export const BOTTLE_SIZES: Record<BottleType, number[]> = {
 }
 
 export const FRACTIONS: { value: Fraction; label: string }[] = [
+  { value: 0, label: '0/4' }, // prepared but the baby drank nothing — it happens
   { value: 0.25, label: '1/4' },
   { value: 0.5, label: '2/4' },
   { value: 0.75, label: '3/4' },

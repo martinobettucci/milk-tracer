@@ -34,7 +34,7 @@ const getSetting = (page: Page, key: string) =>
     return w.milkDb.settings.get(k).then((s) => s?.value)
   }, key)
 
-async function logBottle(page: Page, type: 'small' | 'big', size: number, frac: '1-4' | '2-4' | '3-4' | '4-4') {
+async function logBottle(page: Page, type: 'small' | 'big', size: number, frac: '0-4' | '1-4' | '2-4' | '3-4' | '4-4') {
   await page.getByTestId('nav-log').click()
   await expect(page.getByTestId('step-type')).toBeVisible()
   await page.getByTestId(`type-${type}`).click()
@@ -73,6 +73,14 @@ test('logs several feeds in a row via the Log tab (regression: 2nd feed)', async
 
   await page.getByTestId('nav-stats').click()
   await expect(page.getByTestId('feed-row')).toHaveCount(3)
+})
+
+test('a 0/4 feed saves as nothing drunk, all wasted', async ({ page }) => {
+  await fresh(page)
+  await logBottle(page, 'big', 120, '0-4') // 0 drunk, 120 wasted
+  const rows = await feeds(page)
+  expect(rows).toHaveLength(1)
+  expect(rows[0]).toMatchObject({ sizeMl: 120, drunkMl: 0, wastedMl: 120 })
 })
 
 test('dashboard totals match what was logged', async ({ page }) => {
