@@ -3,6 +3,22 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  build: {
+    // Recharts is ~545 kB min / ~154 kB gzip in its own chunk — expected for a
+    // charting lib; raise the advisory threshold above it so builds stay clean.
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        // Split heavy vendors so no single chunk trips the size warning and
+        // the app loads in parallel pieces.
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          recharts: ['recharts'],
+          vendor: ['dexie', 'dexie-react-hooks', 'date-fns'],
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({

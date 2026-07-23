@@ -19,6 +19,14 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('stats')
   const [now, setNow] = useState(() => Date.now())
   const [wizardOpen, setWizardOpen] = useState(false)
+  // Bumped every time the user opens the Log tab so the form always starts
+  // fresh — otherwise tapping "Log" while on the "saved" screen does nothing.
+  const [logSession, setLogSession] = useState(0)
+
+  const openTab = (k: Tab) => {
+    if (k === 'log') setLogSession((s) => s + 1)
+    setTab(k)
+  }
 
   const feeds = useLiveQuery(() => db.feeds.toArray(), [], [])
   const timerSetting = useLiveQuery(() => db.settings.get('bottleTimerMin'), [])
@@ -63,9 +71,9 @@ export default function App() {
 
       {/* Content */}
       <main className="px-4 py-5">
-        {tab === 'log' && <LogFeed now={now} onLogged={() => undefined} />}
+        {tab === 'log' && <LogFeed key={logSession} now={now} onLogged={() => undefined} />}
         {tab === 'stats' && (
-          <Dashboard feeds={feeds ?? []} now={now} timerMin={timerMin} onGoLog={() => setTab('log')} />
+          <Dashboard feeds={feeds ?? []} now={now} timerMin={timerMin} onGoLog={() => openTab('log')} />
         )}
         {tab === 'data' && (
           <DataPanel themePref={pref} setTheme={setTheme} timerMin={timerMin} setTimerMin={setTimerMin} now={now} />
@@ -91,7 +99,7 @@ export default function App() {
           {tabs.map((tb) => (
             <button
               key={tb.key}
-              onClick={() => setTab(tb.key)}
+              onClick={() => openTab(tb.key)}
               className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-xs font-semibold transition ${
                 tab === tb.key
                   ? 'text-milk-600 dark:text-milk-300'
