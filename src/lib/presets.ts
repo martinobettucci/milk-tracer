@@ -1,7 +1,10 @@
-// Bottle size presets and fraction options for logging a feed.
+// Bottle size presets, fraction options, breast-feeding options and the
+// bottle safety-timer choices used when logging a feed.
 
 export type BottleType = 'small' | 'big'
 export type Fraction = 0.25 | 0.5 | 0.75 | 1
+export type MealKind = 'bottle' | 'breast'
+export type BreastSide = 'left' | 'right'
 
 export const BOTTLE_SIZES: Record<BottleType, number[]> = {
   small: [30, 60, 90, 120, 150],
@@ -23,3 +26,14 @@ export const ALL_SIZES: number[] = Array.from(
 
 export const drunkMl = (sizeMl: number, fraction: Fraction): number =>
   Math.round(sizeMl * fraction)
+
+// Breast feeding is logged per side, in 15-minute slots.
+export const BREAST_SIDES: BreastSide[] = ['left', 'right']
+export const BREAST_SLOT_MIN = 15
+export const BREAST_QUICK_SLOTS = [15, 30, 45, 60] // quick buttons; stepper extends
+export const BREAST_MAX_MIN = 120
+
+// Bottle "safe to drink" timer options (minutes since the feed).
+export const TIMER_OPTIONS = [30, 60, 90, 120] as const
+export type TimerMinutes = (typeof TIMER_OPTIONS)[number]
+export const DEFAULT_TIMER_MIN: TimerMinutes = 60

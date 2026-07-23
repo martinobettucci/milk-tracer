@@ -20,6 +20,14 @@ export type StringKey =
   | 'data_imported' | 'data_replaceNote'
   | 'empty_title' | 'empty_sub' | 'empty_cta'
   | 'ml'
+  // breast feeding
+  | 'log_breast' | 'br_side' | 'br_left' | 'br_right' | 'br_duration' | 'min'
+  | 'bs_title' | 'bs_today' | 'bs_avgFlow' | 'bs_total' | 'bs_sessions'
+  | 'bs_leftRight' | 'bs_daily' | 'bs_avgFreq'
+  // active-bottle safety timer + reclaim
+  | 'ab_title' | 'ab_safeFor' | 'ab_expiresIn' | 'ab_expired' | 'ab_remaining'
+  | 'ab_drankRest' | 'ab_reclaim' | 'ab_giveBack' | 'ab_nothingLeft' | 'ab_fresh'
+  | 'data_timer' | 'data_timerHint'
 
 export type Catalog = Record<StringKey, string>
 
@@ -64,9 +72,20 @@ const en: Catalog = {
   empty_title: 'No feeds yet', empty_sub: 'Log your first bottle to start tracking.',
   empty_cta: 'Log a feed',
   ml: 'ml',
+  log_breast: 'Breast', br_side: 'Which breast?', br_left: 'Left', br_right: 'Right',
+  br_duration: 'How long?', min: 'min',
+  bs_title: 'Breast feeding', bs_today: 'Breast time today', bs_avgFlow: 'Avg per session',
+  bs_total: 'Total breast time', bs_sessions: 'Sessions', bs_leftRight: 'Left vs right',
+  bs_daily: 'Breast minutes per day', bs_avgFreq: 'Avg frequency',
+  ab_title: 'Last bottle', ab_safeFor: 'Safe for', ab_expiresIn: 'Safe for another',
+  ab_expired: 'Expired — no longer safe to drink', ab_remaining: 'Remaining',
+  ab_drankRest: 'Baby drank more?', ab_reclaim: 'Give back',
+  ab_giveBack: 'Give the rest back', ab_nothingLeft: 'All drunk — no waste!',
+  ab_fresh: 'Still fresh', data_timer: 'Bottle safety timer',
+  data_timerHint: 'How long a prepared bottle stays safe to drink after a feed.',
 }
 
-const fr: Catalog = {
+const fr: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Suivez chaque tétée. Gaspillez moins de lait.',
   nav_log: 'Ajouter', nav_stats: 'Stats', nav_data: 'Données',
@@ -92,9 +111,20 @@ const fr: Catalog = {
   empty_title: 'Aucune tétée', empty_sub: 'Ajoutez votre premier biberon pour commencer.',
   empty_cta: 'Ajouter une tétée',
   ml: 'ml',
+  log_breast: 'Sein', br_side: 'Quel sein ?', br_left: 'Gauche', br_right: 'Droit',
+  br_duration: 'Combien de temps ?', min: 'min',
+  bs_title: 'Allaitement', bs_today: 'Temps au sein aujourd’hui', bs_avgFlow: 'Moy. par tétée',
+  bs_total: 'Temps au sein total', bs_sessions: 'Tétées', bs_leftRight: 'Gauche vs droit',
+  bs_daily: 'Minutes au sein par jour', bs_avgFreq: 'Fréquence moy.',
+  ab_title: 'Dernier biberon', ab_safeFor: 'Bon pendant', ab_expiresIn: 'Encore bon pendant',
+  ab_expired: 'Périmé — ne plus donner', ab_remaining: 'Restant',
+  ab_drankRest: 'Bébé a repris ?', ab_reclaim: 'Rendre',
+  ab_giveBack: 'Redonner le reste', ab_nothingLeft: 'Tout bu — aucun gaspillage !',
+  ab_fresh: 'Encore frais', data_timer: 'Minuteur de sécurité biberon',
+  data_timerHint: 'Durée pendant laquelle un biberon préparé reste bon après une tétée.',
 }
 
-const it: Catalog = {
+const it: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Registra ogni poppata. Spreca meno latte.',
   nav_log: 'Aggiungi', nav_stats: 'Statistiche', nav_data: 'Dati',
@@ -120,9 +150,20 @@ const it: Catalog = {
   empty_title: 'Nessuna poppata', empty_sub: 'Registra il primo biberon per iniziare.',
   empty_cta: 'Aggiungi poppata',
   ml: 'ml',
+  log_breast: 'Seno', br_side: 'Quale seno?', br_left: 'Sinistro', br_right: 'Destro',
+  br_duration: 'Quanto tempo?', min: 'min',
+  bs_title: 'Allattamento al seno', bs_today: 'Tempo al seno oggi', bs_avgFlow: 'Media per poppata',
+  bs_total: 'Tempo al seno totale', bs_sessions: 'Poppate', bs_leftRight: 'Sinistro vs destro',
+  bs_daily: 'Minuti al seno al giorno', bs_avgFreq: 'Frequenza media',
+  ab_title: 'Ultimo biberon', ab_safeFor: 'Buono per', ab_expiresIn: 'Ancora buono per',
+  ab_expired: 'Scaduto — non più sicuro', ab_remaining: 'Rimanente',
+  ab_drankRest: 'Il bimbo ha bevuto ancora?', ab_reclaim: 'Restituisci',
+  ab_giveBack: 'Ridai il resto', ab_nothingLeft: 'Tutto bevuto — nessuno spreco!',
+  ab_fresh: 'Ancora fresco', data_timer: 'Timer di sicurezza biberon',
+  data_timerHint: 'Per quanto tempo un biberon preparato resta sicuro dopo una poppata.',
 }
 
-const de: Catalog = {
+const de: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Jede Mahlzeit erfassen. Weniger Milch verschwenden.',
   nav_log: 'Erfassen', nav_stats: 'Statistik', nav_data: 'Daten',
@@ -148,9 +189,20 @@ const de: Catalog = {
   empty_title: 'Noch keine Mahlzeiten', empty_sub: 'Erfasse die erste Flasche, um zu starten.',
   empty_cta: 'Mahlzeit erfassen',
   ml: 'ml',
+  log_breast: 'Brust', br_side: 'Welche Brust?', br_left: 'Links', br_right: 'Rechts',
+  br_duration: 'Wie lange?', min: 'Min',
+  bs_title: 'Stillen', bs_today: 'Stillzeit heute', bs_avgFlow: 'Ø pro Mahlzeit',
+  bs_total: 'Gesamte Stillzeit', bs_sessions: 'Mahlzeiten', bs_leftRight: 'Links vs rechts',
+  bs_daily: 'Stillminuten pro Tag', bs_avgFreq: 'Ø Häufigkeit',
+  ab_title: 'Letzte Flasche', ab_safeFor: 'Haltbar noch', ab_expiresIn: 'Noch haltbar',
+  ab_expired: 'Abgelaufen — nicht mehr sicher', ab_remaining: 'Rest',
+  ab_drankRest: 'Baby hat mehr getrunken?', ab_reclaim: 'Zurückgeben',
+  ab_giveBack: 'Rest zurückgeben', ab_nothingLeft: 'Alles getrunken — keine Verschwendung!',
+  ab_fresh: 'Noch frisch', data_timer: 'Flaschen-Sicherheitstimer',
+  data_timerHint: 'Wie lange eine zubereitete Flasche nach einer Mahlzeit sicher bleibt.',
 }
 
-const es: Catalog = {
+const es: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Registra cada toma. Desperdicia menos leche.',
   nav_log: 'Registrar', nav_stats: 'Estadísticas', nav_data: 'Datos',
@@ -176,9 +228,20 @@ const es: Catalog = {
   empty_title: 'Sin tomas todavía', empty_sub: 'Registra tu primer biberón para empezar.',
   empty_cta: 'Registrar toma',
   ml: 'ml',
+  log_breast: 'Pecho', br_side: '¿Qué pecho?', br_left: 'Izquierdo', br_right: 'Derecho',
+  br_duration: '¿Cuánto tiempo?', min: 'min',
+  bs_title: 'Lactancia', bs_today: 'Tiempo al pecho hoy', bs_avgFlow: 'Media por toma',
+  bs_total: 'Tiempo al pecho total', bs_sessions: 'Tomas', bs_leftRight: 'Izquierdo vs derecho',
+  bs_daily: 'Minutos al pecho por día', bs_avgFreq: 'Frecuencia media',
+  ab_title: 'Último biberón', ab_safeFor: 'Seguro durante', ab_expiresIn: 'Seguro aún',
+  ab_expired: 'Caducado — ya no es seguro', ab_remaining: 'Restante',
+  ab_drankRest: '¿El bebé bebió más?', ab_reclaim: 'Devolver',
+  ab_giveBack: 'Devolver el resto', ab_nothingLeft: 'Todo bebido — ¡sin desperdicio!',
+  ab_fresh: 'Aún fresco', data_timer: 'Temporizador de seguridad del biberón',
+  data_timerHint: 'Cuánto tiempo un biberón preparado sigue siendo seguro tras una toma.',
 }
 
-const pt: Catalog = {
+const pt: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Registe cada mamada. Desperdice menos leite.',
   nav_log: 'Registar', nav_stats: 'Estatísticas', nav_data: 'Dados',
@@ -204,9 +267,20 @@ const pt: Catalog = {
   empty_title: 'Ainda sem mamadas', empty_sub: 'Registe o primeiro biberão para começar.',
   empty_cta: 'Registar mamada',
   ml: 'ml',
+  log_breast: 'Peito', br_side: 'Qual peito?', br_left: 'Esquerdo', br_right: 'Direito',
+  br_duration: 'Quanto tempo?', min: 'min',
+  bs_title: 'Amamentação', bs_today: 'Tempo ao peito hoje', bs_avgFlow: 'Média por mamada',
+  bs_total: 'Tempo ao peito total', bs_sessions: 'Mamadas', bs_leftRight: 'Esquerdo vs direito',
+  bs_daily: 'Minutos ao peito por dia', bs_avgFreq: 'Frequência média',
+  ab_title: 'Último biberão', ab_safeFor: 'Seguro por', ab_expiresIn: 'Seguro ainda',
+  ab_expired: 'Expirado — já não é seguro', ab_remaining: 'Restante',
+  ab_drankRest: 'O bebé bebeu mais?', ab_reclaim: 'Devolver',
+  ab_giveBack: 'Devolver o resto', ab_nothingLeft: 'Tudo bebido — sem desperdício!',
+  ab_fresh: 'Ainda fresco', data_timer: 'Temporizador de segurança do biberão',
+  data_timerHint: 'Quanto tempo um biberão preparado continua seguro após uma mamada.',
 }
 
-const nl: Catalog = {
+const nl: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Registreer elke voeding. Verspil minder melk.',
   nav_log: 'Toevoegen', nav_stats: 'Statistieken', nav_data: 'Gegevens',
@@ -232,9 +306,20 @@ const nl: Catalog = {
   empty_title: 'Nog geen voedingen', empty_sub: 'Registreer je eerste fles om te beginnen.',
   empty_cta: 'Voeding toevoegen',
   ml: 'ml',
+  log_breast: 'Borst', br_side: 'Welke borst?', br_left: 'Links', br_right: 'Rechts',
+  br_duration: 'Hoe lang?', min: 'min',
+  bs_title: 'Borstvoeding', bs_today: 'Borsttijd vandaag', bs_avgFlow: 'Gem. per voeding',
+  bs_total: 'Totale borsttijd', bs_sessions: 'Voedingen', bs_leftRight: 'Links vs rechts',
+  bs_daily: 'Borstminuten per dag', bs_avgFreq: 'Gem. frequentie',
+  ab_title: 'Laatste fles', ab_safeFor: 'Veilig nog', ab_expiresIn: 'Nog veilig',
+  ab_expired: 'Verlopen — niet meer veilig', ab_remaining: 'Resterend',
+  ab_drankRest: 'Baby dronk meer?', ab_reclaim: 'Teruggeven',
+  ab_giveBack: 'Geef de rest terug', ab_nothingLeft: 'Alles op — geen verspilling!',
+  ab_fresh: 'Nog vers', data_timer: 'Veiligheidstimer fles',
+  data_timerHint: 'Hoe lang een klaargemaakte fles veilig blijft na een voeding.',
 }
 
-const pl: Catalog = {
+const pl: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Zapisuj każde karmienie. Marnuj mniej mleka.',
   nav_log: 'Dodaj', nav_stats: 'Statystyki', nav_data: 'Dane',
@@ -262,7 +347,7 @@ const pl: Catalog = {
   ml: 'ml',
 }
 
-const sv: Catalog = {
+const sv: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Registrera varje matning. Slösa mindre mjölk.',
   nav_log: 'Lägg till', nav_stats: 'Statistik', nav_data: 'Data',
@@ -290,7 +375,7 @@ const sv: Catalog = {
   ml: 'ml',
 }
 
-const da: Catalog = {
+const da: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Registrer hver madning. Spild mindre mælk.',
   nav_log: 'Tilføj', nav_stats: 'Statistik', nav_data: 'Data',
@@ -318,7 +403,7 @@ const da: Catalog = {
   ml: 'ml',
 }
 
-const fi: Catalog = {
+const fi: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Kirjaa jokainen syöttö. Hukkaa vähemmän maitoa.',
   nav_log: 'Lisää', nav_stats: 'Tilastot', nav_data: 'Tiedot',
@@ -346,7 +431,7 @@ const fi: Catalog = {
   ml: 'ml',
 }
 
-const cs: Catalog = {
+const cs: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Zaznamenejte každé krmení. Plýtvejte méně mlékem.',
   nav_log: 'Přidat', nav_stats: 'Statistiky', nav_data: 'Data',
@@ -374,7 +459,7 @@ const cs: Catalog = {
   ml: 'ml',
 }
 
-const sk: Catalog = {
+const sk: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Zaznamenajte každé kŕmenie. Plytvajte menej mliekom.',
   nav_log: 'Pridať', nav_stats: 'Štatistiky', nav_data: 'Údaje',
@@ -402,7 +487,7 @@ const sk: Catalog = {
   ml: 'ml',
 }
 
-const sl: Catalog = {
+const sl: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Zabeležite vsako hranjenje. Zapravite manj mleka.',
   nav_log: 'Dodaj', nav_stats: 'Statistika', nav_data: 'Podatki',
@@ -430,7 +515,7 @@ const sl: Catalog = {
   ml: 'ml',
 }
 
-const hr: Catalog = {
+const hr: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Zabilježite svako hranjenje. Bacajte manje mlijeka.',
   nav_log: 'Dodaj', nav_stats: 'Statistika', nav_data: 'Podaci',
@@ -458,7 +543,7 @@ const hr: Catalog = {
   ml: 'ml',
 }
 
-const ro: Catalog = {
+const ro: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Înregistrează fiecare masă. Risipește mai puțin lapte.',
   nav_log: 'Adaugă', nav_stats: 'Statistici', nav_data: 'Date',
@@ -486,7 +571,7 @@ const ro: Catalog = {
   ml: 'ml',
 }
 
-const hu: Catalog = {
+const hu: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Rögzíts minden etetést. Pazarolj kevesebb tejet.',
   nav_log: 'Hozzáad', nav_stats: 'Statisztika', nav_data: 'Adatok',
@@ -514,7 +599,7 @@ const hu: Catalog = {
   ml: 'ml',
 }
 
-const el: Catalog = {
+const el: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Καταγράψτε κάθε γεύμα. Σπαταλήστε λιγότερο γάλα.',
   nav_log: 'Προσθήκη', nav_stats: 'Στατιστικά', nav_data: 'Δεδομένα',
@@ -542,7 +627,7 @@ const el: Catalog = {
   ml: 'ml',
 }
 
-const bg: Catalog = {
+const bg: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Записвайте всяко хранене. Разхищавайте по-малко мляко.',
   nav_log: 'Добави', nav_stats: 'Статистика', nav_data: 'Данни',
@@ -570,7 +655,7 @@ const bg: Catalog = {
   ml: 'мл',
 }
 
-const et: Catalog = {
+const et: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Registreeri iga söötmine. Raiska vähem piima.',
   nav_log: 'Lisa', nav_stats: 'Statistika', nav_data: 'Andmed',
@@ -598,7 +683,7 @@ const et: Catalog = {
   ml: 'ml',
 }
 
-const lt: Catalog = {
+const lt: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Registruokite kiekvieną maitinimą. Švaistykite mažiau pieno.',
   nav_log: 'Pridėti', nav_stats: 'Statistika', nav_data: 'Duomenys',
@@ -626,7 +711,7 @@ const lt: Catalog = {
   ml: 'ml',
 }
 
-const lv: Catalog = {
+const lv: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Reģistrē katru barošanu. Izšķērdē mazāk piena.',
   nav_log: 'Pievienot', nav_stats: 'Statistika', nav_data: 'Dati',
@@ -654,7 +739,7 @@ const lv: Catalog = {
   ml: 'ml',
 }
 
-const ga: Catalog = {
+const ga: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Taifead gach beathú. Cuir níos lú bainne amú.',
   nav_log: 'Cuir leis', nav_stats: 'Staitisticí', nav_data: 'Sonraí',
@@ -682,7 +767,7 @@ const ga: Catalog = {
   ml: 'ml',
 }
 
-const mt: Catalog = {
+const mt: Partial<Catalog> = {
   appName: 'Milk Tracer',
   tagline: 'Irreġistra kull tmigħ. Aħli inqas ħalib.',
   nav_log: 'Żid', nav_stats: 'Statistika', nav_data: 'Data',
@@ -710,6 +795,6 @@ const mt: Catalog = {
   ml: 'ml',
 }
 
-export const CATALOGS: Record<Locale, Catalog> = {
+export const CATALOGS: Record<Locale, Partial<Catalog>> = {
   bg, cs, da, de, el, en, es, et, fi, fr, ga, hr, hu, it, lt, lv, mt, nl, pl, pt, ro, sk, sl, sv,
 }

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { db } from './db/db'
+import { db, setSetting } from './db/db'
 import { useI18n } from './i18n'
 import { useTheme } from './lib/theme'
+import { DEFAULT_TIMER_MIN } from './lib/presets'
 import LogFeed from './components/LogFeed'
 import Dashboard from './components/Dashboard'
 import DataPanel from './components/DataPanel'
@@ -16,6 +17,9 @@ export default function App() {
   const [now, setNow] = useState(() => Date.now())
 
   const feeds = useLiveQuery(() => db.feeds.toArray(), [], [])
+  const timerSetting = useLiveQuery(() => db.settings.get('bottleTimerMin'), [])
+  const timerMin = timerSetting?.value ? Number(timerSetting.value) : DEFAULT_TIMER_MIN
+  const setTimerMin = (m: number) => setSetting('bottleTimerMin', String(m))
 
   // Keep "now" fresh so the recommendation clock stays sensible.
   useEffect(() => {
@@ -46,8 +50,12 @@ export default function App() {
       {/* Content */}
       <main className="px-4 py-5">
         {tab === 'log' && <LogFeed now={now} onLogged={() => undefined} />}
-        {tab === 'stats' && <Dashboard feeds={feeds ?? []} now={now} onGoLog={() => setTab('log')} />}
-        {tab === 'data' && <DataPanel themePref={pref} setTheme={setTheme} now={now} />}
+        {tab === 'stats' && (
+          <Dashboard feeds={feeds ?? []} now={now} timerMin={timerMin} onGoLog={() => setTab('log')} />
+        )}
+        {tab === 'data' && (
+          <DataPanel themePref={pref} setTheme={setTheme} timerMin={timerMin} setTimerMin={setTimerMin} now={now} />
+        )}
       </main>
 
       {/* Bottom nav */}

@@ -3,14 +3,17 @@ import { useI18n } from '../i18n'
 import { EU_LOCALES, LOCALE_NAMES, type Locale } from '../i18n/catalog'
 import { exportData, importData, clearAllFeeds, type BackupFile } from '../db/db'
 import type { ThemePref } from '../lib/theme'
+import { TIMER_OPTIONS } from '../lib/presets'
 
 interface Props {
   themePref: ThemePref
   setTheme: (p: ThemePref) => void
+  timerMin: number
+  setTimerMin: (m: number) => void
   now: number
 }
 
-export default function DataPanel({ themePref, setTheme, now }: Props) {
+export default function DataPanel({ themePref, setTheme, timerMin, setTimerMin, now }: Props) {
   const { t, locale, setLocale, isAuto } = useI18n()
   const fileRef = useRef<HTMLInputElement>(null)
   const [msg, setMsg] = useState<string | null>(null)
@@ -58,6 +61,25 @@ export default function DataPanel({ themePref, setTheme, now }: Props) {
             </option>
           ))}
         </select>
+      </div>
+
+      {/* Bottle safety timer */}
+      <div className="card space-y-2">
+        <label className="text-sm font-medium text-stone-500">⏱ {t('data_timer')}</label>
+        <div className="grid grid-cols-4 gap-2">
+          {TIMER_OPTIONS.map((m) => (
+            <button
+              key={m}
+              onClick={() => setTimerMin(m)}
+              className={`chip py-3 text-sm ${timerMin === m ? 'chip-active' : ''}`}
+              data-testid={`timer-${m}`}
+            >
+              {m}
+              <span className="text-xs font-normal text-stone-400">{t('min')}</span>
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-stone-400">{t('data_timerHint')}</p>
       </div>
 
       {/* Theme */}

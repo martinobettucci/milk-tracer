@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import { useI18n } from '../i18n'
-import { addFeed } from '../db/db'
-import { BOTTLE_SIZES, FRACTIONS, drunkMl, type BottleType, type Fraction } from '../lib/presets'
+import { addBottleFeed, addBreastFeed } from '../db/db'
+import {
+  BOTTLE_SIZES, FRACTIONS, drunkMl, BREAST_SIDES, BREAST_QUICK_SLOTS, BREAST_SLOT_MIN,
+  BREAST_MAX_MIN, type BottleType, type BreastSide, type Fraction,
+} from '../lib/presets'
 import { toLocalInput, fromLocalInput } from '../lib/format'
 
-type Step = 'type' | 'size' | 'fraction' | 'done'
+type Choice = 'small' | 'big' | 'breast'
+type Step = 'type' | 'size' | 'fraction' | 'side' | 'duration' | 'done'
 
 interface Props {
   now: number
@@ -14,27 +18,39 @@ interface Props {
 export default function LogFeed({ now, onLogged }: Props) {
   const { t } = useI18n()
   const [step, setStep] = useState<Step>('type')
-  const [bottleType, setBottleType] = useState<BottleType | null>(null)
+  const [choice, setChoice] = useState<Choice | null>(null)
   const [sizeMl, setSizeMl] = useState<number | null>(null)
   const [fraction, setFraction] = useState<Fraction | null>(null)
+  const [side, setSide] = useState<BreastSide | null>(null)
+  const [durationMin, setDurationMin] = useState<number>(BREAST_SLOT_MIN)
   const [when, setWhen] = useState<number>(now)
 
   const reset = () => {
     setStep('type')
-    setBottleType(null)
+    setChoice(null)
     setSizeMl(null)
     setFraction(null)
+    setSide(null)
+    setDurationMin(BREAST_SLOT_MIN)
     setWhen(Date.now())
   }
 
-  const save = async () => {
-    if (!bottleType || !sizeMl || !fraction) return
-    await addFeed({ timestamp: when, bottleType, sizeMl, fraction })
+  const saveBottle = async () => {
+    if (!choice || choice === 'breast' || !sizeMl || !fraction) return
+    await addBottleFeed({ timestamp: when, bottleType: choice, sizeMl, fraction })
     setStep('done')
     onLogged?.()
   }
 
-  const stepIndex = { type: 0, size: 1, fraction: 2, done: 3 }[step]
+  const saveBreast = async () => {
+    if (!side) return
+    await addBreastFeed({ timestamp: when, side, durationMin })
+    setStep('done')
+    onLogged?.()
+  }
+
+  const stepIndex =
+    step === 'type' ? 0 : step === 'size' || step === 'side' ? 1 : step === 'done' ? 3 : 2
 
   return (
     <div className="mx-auto max-w-md space-y-5">
@@ -53,25 +69,28 @@ export default function LogFeed({ now, onLogged }: Props) {
       {step === 'type' && (
         <section className="space-y-4" data-testid="step-type">
           <h2 className="text-center text-lg font-bold">{t('log_type')}</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {(['small', 'big'] as BottleType[]).map((bt) => (
+          <div className="grid grid-cols-3 gap-3">
+            {(['small', 'big', 'breast'] as Choice[]).map((c) => (
               <button
-                key={bt}
-                className="chip aspect-square text-xl"
+                key={c}
+                className="chip py-4"
                 onClick={() => {
-                  setBottleType(bt)
-                  setStep('size')
+                  setChoice(c)
+                  if (c === 'breast') setStep('side')
+                  else {
+                    setSizeMl(null)
+                    setStep('size')
+                  }
                 }}
-                data-testid={`type-${bt}`}
+                data-testid={`type-${c}`}
               >
                 <img
-                  src={`/art/bottle-${bt}.webp`}
+                  src={`/art/${c === 'breast' ? 'breast' : `bottle-${c}`}.webp`}
                   alt=""
-                  className={`${bt === 'small' ? 'h-20' : 'h-24'} w-auto object-contain drop-shadow-sm`}
+                  className="h-16 w-auto object-contain drop-shadow-sm"
                 />
-                <span className="mt-2">{t(bt === 'small' ? 'log_small' : 'log_big')}</span>
-                <span className="mt-1 text-xs font-normal text-stone-400">
-                  {BOTTLE_SIZES[bt][0]}–{BOTTLE_SIZES[bt][BOTTLE_SIZES[bt].length - 1]} {t('ml')}
+                <span className="mt-2 text-sm">
+                  {t(c === 'small' ? 'log_small' : c === 'big' ? 'log_big' : 'log_breast')}
                 </span>
               </button>
             ))}
@@ -79,11 +98,12 @@ export default function LogFeed({ now, onLogged }: Props) {
         </section>
       )}
 
-      {step === 'size' && bottleType && (
+      {/* ---- bottle: size ---- */}
+      {step === 'size' && (choice === 'small' || choice === 'big') && (
         <section className="space-y-4" data-testid="step-size">
           <h2 className="text-center text-lg font-bold">{t('log_size')}</h2>
           <div className="grid grid-cols-3 gap-3">
-            {BOTTLE_SIZES[bottleType].map((s) => (
+            {BOTTLE_SIZES[choice as BottleType].map((s) => (
               <button
                 key={s}
                 className="chip py-6 text-lg"
@@ -104,6 +124,7 @@ export default function LogFeed({ now, onLogged }: Props) {
         </section>
       )}
 
+      {/* ---- bottle: fraction ---- */}
       {step === 'fraction' && sizeMl && (
         <section className="space-y-4" data-testid="step-fraction">
           <h2 className="text-center text-lg font-bold">{t('log_fraction')}</h2>
@@ -127,15 +148,7 @@ export default function LogFeed({ now, onLogged }: Props) {
             ))}
           </div>
 
-          <label className="block text-sm">
-            <span className="mb-1 block font-medium text-stone-500">{t('log_when')}</span>
-            <input
-              type="datetime-local"
-              className="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-stone-800 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
-              value={toLocalInput(when)}
-              onChange={(e) => setWhen(fromLocalInput(e.target.value))}
-            />
-          </label>
+          <WhenField label={t('log_when')} when={when} setWhen={setWhen} />
 
           <div className="flex gap-3">
             <button className="btn-ghost flex-1" onClick={() => setStep('size')}>
@@ -144,9 +157,92 @@ export default function LogFeed({ now, onLogged }: Props) {
             <button
               className="btn-primary flex-1"
               disabled={!fraction}
-              onClick={save}
+              onClick={saveBottle}
               data-testid="save-feed"
             >
+              {t('log_save')}
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* ---- breast: side ---- */}
+      {step === 'side' && (
+        <section className="space-y-4" data-testid="step-side">
+          <h2 className="text-center text-lg font-bold">{t('br_side')}</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {BREAST_SIDES.map((s) => (
+              <button
+                key={s}
+                className="chip aspect-[3/2] text-xl"
+                onClick={() => {
+                  setSide(s)
+                  setStep('duration')
+                }}
+                data-testid={`side-${s}`}
+              >
+                <span className="text-4xl">{s === 'left' ? '🫱' : '🫲'}</span>
+                <span className="mt-1">{t(s === 'left' ? 'br_left' : 'br_right')}</span>
+              </button>
+            ))}
+          </div>
+          <button className="btn-ghost w-full" onClick={() => setStep('type')}>
+            ← {t('log_back')}
+          </button>
+        </section>
+      )}
+
+      {/* ---- breast: duration ---- */}
+      {step === 'duration' && side && (
+        <section className="space-y-4" data-testid="step-duration">
+          <h2 className="text-center text-lg font-bold">{t('br_duration')}</h2>
+          <p className="text-center text-sm text-stone-400">
+            {t(side === 'left' ? 'br_left' : 'br_right')}
+          </p>
+
+          <div className="grid grid-cols-4 gap-2">
+            {BREAST_QUICK_SLOTS.map((m) => (
+              <button
+                key={m}
+                className={`chip py-4 text-lg ${durationMin === m ? 'chip-active' : ''}`}
+                onClick={() => setDurationMin(m)}
+                data-testid={`slot-${m}`}
+              >
+                {m}
+                <span className="text-xs font-normal text-stone-400">{t('min')}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* fine stepper in 15-min slots */}
+          <div className="flex items-center justify-center gap-4">
+            <button
+              className="btn-ghost h-11 w-11 !px-0 text-xl"
+              onClick={() => setDurationMin((d) => Math.max(BREAST_SLOT_MIN, d - BREAST_SLOT_MIN))}
+              aria-label="-15"
+            >
+              −
+            </button>
+            <div className="min-w-[6rem] text-center text-3xl font-extrabold tabular-nums text-milk-600 dark:text-milk-300">
+              {durationMin}
+              <span className="ml-1 text-base font-semibold text-stone-400">{t('min')}</span>
+            </div>
+            <button
+              className="btn-ghost h-11 w-11 !px-0 text-xl"
+              onClick={() => setDurationMin((d) => Math.min(BREAST_MAX_MIN, d + BREAST_SLOT_MIN))}
+              aria-label="+15"
+            >
+              +
+            </button>
+          </div>
+
+          <WhenField label={t('log_when')} when={when} setWhen={setWhen} />
+
+          <div className="flex gap-3">
+            <button className="btn-ghost flex-1" onClick={() => setStep('side')}>
+              ← {t('log_back')}
+            </button>
+            <button className="btn-primary flex-1" onClick={saveBreast} data-testid="save-breast">
               {t('log_save')}
             </button>
           </div>
@@ -163,6 +259,28 @@ export default function LogFeed({ now, onLogged }: Props) {
         </section>
       )}
     </div>
+  )
+}
+
+function WhenField({
+  label,
+  when,
+  setWhen,
+}: {
+  label: string
+  when: number
+  setWhen: (n: number) => void
+}) {
+  return (
+    <label className="block text-sm">
+      <span className="mb-1 block font-medium text-stone-500">{label}</span>
+      <input
+        type="datetime-local"
+        className="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-stone-800 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
+        value={toLocalInput(when)}
+        onChange={(e) => setWhen(fromLocalInput(e.target.value))}
+      />
+    </label>
   )
 }
 

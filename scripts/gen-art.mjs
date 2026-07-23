@@ -49,6 +49,12 @@ const JOBS = [
     prompt: `A sparse scattered arrangement of small simple nursery doodles — a few tiny baby bottles, little clouds, small stars and small hearts — spread out with lots of empty space between them. Thin flat pale peach and warm rose shapes only, no outlines box. ${COZY}. ${ISOLATE}. There must be nothing between the doodles, only transparency.`,
   },
   {
+    file: 'breast.png',
+    size: '1024x1024',
+    transparent: true,
+    prompt: `A wholesome, tender minimal icon: the warm rounded silhouette of a mother gently cradling and nursing her baby, viewed from the side, soft and modest, no explicit detail, just a loving simple shape. ${COZY}. ${ISOLATE}.`,
+  },
+  {
     file: 'app-icon.png',
     size: '1024x1024',
     transparent: false,

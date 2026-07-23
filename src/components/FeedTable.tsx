@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { useI18n } from '../i18n'
-import { deleteFeed, updateFeed, type Feed } from '../db/db'
-import { BOTTLE_SIZES, FRACTIONS, type Fraction } from '../lib/presets'
+import { deleteFeed, updateBottleFeed, updateBreastFeed, type Feed } from '../db/db'
+import {
+  BOTTLE_SIZES, FRACTIONS, BREAST_SIDES, BREAST_SLOT_MIN, BREAST_MAX_MIN,
+  type BreastSide, type Fraction,
+} from '../lib/presets'
 import { fmtDateTime, toLocalInput, fromLocalInput } from '../lib/format'
 
 export default function FeedTable({ feeds }: { feeds: Feed[] }) {
@@ -28,27 +31,44 @@ export default function FeedTable({ feeds }: { feeds: Feed[] }) {
           <tbody>
             {rows.map((f) =>
               editing === f.id ? (
-                <EditRow
-                  key={f.id}
-                  feed={f}
-                  onDone={() => setEditing(null)}
-                />
+                f.kind === 'breast' ? (
+                  <BreastEditRow key={f.id} feed={f} onDone={() => setEditing(null)} />
+                ) : (
+                  <BottleEditRow key={f.id} feed={f} onDone={() => setEditing(null)} />
+                )
               ) : (
                 <tr
                   key={f.id}
                   className="border-t border-stone-100 dark:border-stone-800"
                   data-testid="feed-row"
                 >
-                  <td className="px-3 py-2 whitespace-nowrap">{fmtDateTime(f.timestamp, locale)}</td>
-                  <td className="px-3 py-2 tabular-nums">
-                    {f.sizeMl} {t('ml')}
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    <span className="mr-1">{f.kind === 'breast' ? '🤱' : '🍼'}</span>
+                    {fmtDateTime(f.timestamp, locale)}
                   </td>
-                  <td className="px-3 py-2 font-semibold text-milk-600 tabular-nums dark:text-milk-300">
-                    {f.drunkMl}
-                  </td>
-                  <td className="px-3 py-2 text-amber-600 tabular-nums dark:text-amber-400">
-                    {f.wastedMl}
-                  </td>
+                  {f.kind === 'breast' ? (
+                    <>
+                      <td className="px-3 py-2">
+                        {t(f.side === 'left' ? 'br_left' : 'br_right')}
+                      </td>
+                      <td className="px-3 py-2 font-semibold text-milk-600 tabular-nums dark:text-milk-300">
+                        {f.durationMin} {t('min')}
+                      </td>
+                      <td className="px-3 py-2 text-stone-300 dark:text-stone-600">—</td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="px-3 py-2 tabular-nums">
+                        {f.sizeMl} {t('ml')}
+                      </td>
+                      <td className="px-3 py-2 font-semibold text-milk-600 tabular-nums dark:text-milk-300">
+                        {f.drunkMl}
+                      </td>
+                      <td className="px-3 py-2 text-amber-600 tabular-nums dark:text-amber-400">
+                        {f.wastedMl}
+                      </td>
+                    </>
+                  )}
                   <td className="px-3 py-2">
                     <div className="flex justify-end gap-1">
                       <button
@@ -76,67 +96,102 @@ export default function FeedTable({ feeds }: { feeds: Feed[] }) {
   )
 }
 
-function EditRow({ feed, onDone }: { feed: Feed; onDone: () => void }) {
+const editInput =
+  'w-full rounded-lg border border-stone-200 bg-white px-2 py-1 text-xs dark:border-stone-700 dark:bg-stone-900'
+const editSelect =
+  'rounded-lg border border-stone-200 bg-white px-2 py-1 text-xs dark:border-stone-700 dark:bg-stone-900'
+
+function BottleEditRow({ feed, onDone }: { feed: Feed; onDone: () => void }) {
   const { t } = useI18n()
   const [when, setWhen] = useState(feed.timestamp)
-  const [sizeMl, setSizeMl] = useState(feed.sizeMl)
-  const [fraction, setFraction] = useState<Fraction>(feed.fraction)
+  const [sizeMl, setSizeMl] = useState(feed.sizeMl ?? 0)
+  const [fraction, setFraction] = useState<Fraction>(feed.fraction ?? 1)
   const allSizes = [...new Set([...BOTTLE_SIZES.small, ...BOTTLE_SIZES.big])].sort((a, b) => a - b)
 
   const save = async () => {
-    if (feed.id) await updateFeed(feed.id, { timestamp: when, sizeMl, fraction })
+    if (feed.id) await updateBottleFeed(feed.id, { timestamp: when, sizeMl, fraction })
     onDone()
   }
 
   return (
     <tr className="border-t border-milk-200 bg-milk-50/60 dark:border-milk-800 dark:bg-milk-900/20">
       <td className="px-3 py-2">
-        <input
-          type="datetime-local"
-          className="w-full rounded-lg border border-stone-200 bg-white px-2 py-1 text-xs dark:border-stone-700 dark:bg-stone-900"
-          value={toLocalInput(when)}
-          onChange={(e) => setWhen(fromLocalInput(e.target.value))}
-        />
+        <input type="datetime-local" className={editInput} value={toLocalInput(when)}
+          onChange={(e) => setWhen(fromLocalInput(e.target.value))} />
       </td>
       <td className="px-3 py-2">
-        <select
-          className="rounded-lg border border-stone-200 bg-white px-2 py-1 text-xs dark:border-stone-700 dark:bg-stone-900"
-          value={sizeMl}
-          onChange={(e) => setSizeMl(Number(e.target.value))}
-        >
+        <select className={editSelect} value={sizeMl} onChange={(e) => setSizeMl(Number(e.target.value))}>
           {allSizes.map((s) => (
-            <option key={s} value={s}>
-              {s} {t('ml')}
-            </option>
+            <option key={s} value={s}>{s} {t('ml')}</option>
           ))}
         </select>
       </td>
       <td className="px-3 py-2" colSpan={2}>
-        <select
-          className="rounded-lg border border-stone-200 bg-white px-2 py-1 text-xs dark:border-stone-700 dark:bg-stone-900"
-          value={fraction}
-          onChange={(e) => setFraction(Number(e.target.value) as Fraction)}
-        >
+        <select className={editSelect} value={fraction}
+          onChange={(e) => setFraction(Number(e.target.value) as Fraction)}>
           {FRACTIONS.map((fr) => (
-            <option key={fr.value} value={fr.value}>
-              {fr.label}
-            </option>
+            <option key={fr.value} value={fr.value}>{fr.label}</option>
           ))}
         </select>
       </td>
-      <td className="px-3 py-2">
-        <div className="flex justify-end gap-1">
-          <button className="rounded-lg bg-milk-600 px-2 py-1 text-xs font-medium text-white" onClick={save}>
-            {t('save')}
-          </button>
-          <button
-            className="rounded-lg px-2 py-1 text-xs font-medium text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-800"
-            onClick={onDone}
-          >
-            {t('cancel')}
-          </button>
-        </div>
-      </td>
+      <EditActions onSave={save} onDone={onDone} />
     </tr>
+  )
+}
+
+function BreastEditRow({ feed, onDone }: { feed: Feed; onDone: () => void }) {
+  const { t } = useI18n()
+  const [when, setWhen] = useState(feed.timestamp)
+  const [side, setSide] = useState<BreastSide>(feed.side ?? 'left')
+  const [durationMin, setDurationMin] = useState(feed.durationMin ?? BREAST_SLOT_MIN)
+  const slots: number[] = []
+  for (let m = BREAST_SLOT_MIN; m <= BREAST_MAX_MIN; m += BREAST_SLOT_MIN) slots.push(m)
+
+  const save = async () => {
+    if (feed.id) await updateBreastFeed(feed.id, { timestamp: when, side, durationMin })
+    onDone()
+  }
+
+  return (
+    <tr className="border-t border-milk-200 bg-milk-50/60 dark:border-milk-800 dark:bg-milk-900/20">
+      <td className="px-3 py-2">
+        <input type="datetime-local" className={editInput} value={toLocalInput(when)}
+          onChange={(e) => setWhen(fromLocalInput(e.target.value))} />
+      </td>
+      <td className="px-3 py-2">
+        <select className={editSelect} value={side} onChange={(e) => setSide(e.target.value as BreastSide)}>
+          {BREAST_SIDES.map((s) => (
+            <option key={s} value={s}>{t(s === 'left' ? 'br_left' : 'br_right')}</option>
+          ))}
+        </select>
+      </td>
+      <td className="px-3 py-2" colSpan={2}>
+        <select className={editSelect} value={durationMin} onChange={(e) => setDurationMin(Number(e.target.value))}>
+          {slots.map((m) => (
+            <option key={m} value={m}>{m} {t('min')}</option>
+          ))}
+        </select>
+      </td>
+      <EditActions onSave={save} onDone={onDone} />
+    </tr>
+  )
+}
+
+function EditActions({ onSave, onDone }: { onSave: () => void; onDone: () => void }) {
+  const { t } = useI18n()
+  return (
+    <td className="px-3 py-2">
+      <div className="flex justify-end gap-1">
+        <button className="rounded-lg bg-milk-600 px-2 py-1 text-xs font-medium text-white" onClick={onSave}>
+          {t('save')}
+        </button>
+        <button
+          className="rounded-lg px-2 py-1 text-xs font-medium text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-800"
+          onClick={onDone}
+        >
+          {t('cancel')}
+        </button>
+      </div>
+    </td>
   )
 }

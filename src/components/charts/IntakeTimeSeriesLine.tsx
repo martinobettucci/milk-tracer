@@ -3,15 +3,16 @@ import {
 } from 'recharts'
 import { useI18n } from '../../i18n'
 import type { Feed } from '../../db/db'
+import { bottleFeeds } from '../../lib/stats'
 import { COLORS } from './palette'
 import ChartCard, { ChartEmpty } from './ChartCard'
 import { fmtDateTime } from '../../lib/format'
 
 export default function IntakeTimeSeriesLine({ feeds }: { feeds: Feed[] }) {
   const { t, locale } = useI18n()
-  const data = [...feeds]
+  const data = bottleFeeds(feeds)
     .sort((a, b) => a.timestamp - b.timestamp)
-    .map((f) => ({ ts: f.timestamp, drunk: f.drunkMl }))
+    .map((f) => ({ ts: f.timestamp, drunk: f.drunkMl ?? 0 }))
 
   return (
     <ChartCard title={t('ch_intake')}>

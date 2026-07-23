@@ -38,6 +38,7 @@ const webp = [
   { src: 'empty-hero.png', out: 'art/empty-hero.webp', w: 560, h: 560, q: 0.85 },
   { src: 'bottle-small.png', out: 'art/bottle-small.webp', w: 320, h: 320, q: 0.9 },
   { src: 'bottle-big.png', out: 'art/bottle-big.webp', w: 320, h: 320, q: 0.9 },
+  { src: 'breast.png', out: 'art/breast.webp', w: 320, h: 320, q: 0.9 },
   { src: 'bg-pattern.png', out: 'art/bg-pattern.webp', w: 640, h: 960, q: 0.8 },
 ]
 for (const j of webp) {

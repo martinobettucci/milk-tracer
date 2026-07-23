@@ -120,3 +120,47 @@ test('09 localized — Italian log flow', async ({ page }) => {
   await expect(page.getByTestId('step-fraction')).toBeVisible()
   await page.screenshot({ path: `${SHOT_DIR}/09-log-it.png`, fullPage: true })
 })
+
+test('10 log type incl. breast', async ({ page }) => {
+  await page.goto('/')
+  await page.getByTestId('nav-log').click()
+  await expect(page.getByTestId('type-breast')).toBeVisible()
+  await page.screenshot({ path: `${SHOT_DIR}/10-log-type3.png`, fullPage: true })
+})
+
+test('11 breast flow — side + duration', async ({ page }) => {
+  await page.goto('/')
+  await page.getByTestId('nav-log').click()
+  await page.getByTestId('type-breast').click()
+  await expect(page.getByTestId('step-side')).toBeVisible()
+  await page.screenshot({ path: `${SHOT_DIR}/11a-breast-side.png`, fullPage: true })
+  await page.getByTestId('side-left').click()
+  await expect(page.getByTestId('step-duration')).toBeVisible()
+  await page.getByTestId('slot-30').click()
+  await page.waitForTimeout(200) // let the active-slot highlight settle
+  await page.screenshot({ path: `${SHOT_DIR}/11b-breast-duration.png`, fullPage: true })
+})
+
+test('12 active-bottle timer + reclaim', async ({ page }) => {
+  await seed(page)
+  await page.getByTestId('nav-stats').click()
+  await expect(page.getByTestId('active-bottle')).toBeVisible()
+  // capture just the active-bottle card (the interesting part)
+  await page.getByTestId('active-bottle').screenshot({ path: `${SHOT_DIR}/12-active-bottle.png` })
+})
+
+test('13 breast stats section', async ({ page }) => {
+  await seed(page)
+  await page.getByTestId('nav-stats').click()
+  await expect(page.getByTestId('breast-section')).toBeVisible()
+  await page.getByTestId('breast-section').scrollIntoViewIfNeeded()
+  await page.getByTestId('breast-section').screenshot({ path: `${SHOT_DIR}/13-breast-stats.png` })
+})
+
+test('14 data panel — safety timer setting', async ({ page }) => {
+  await seed(page)
+  await page.getByTestId('nav-data').click()
+  await expect(page.getByTestId('timer-90')).toBeVisible()
+  await page.getByTestId('timer-90').click()
+  await page.screenshot({ path: `${SHOT_DIR}/14-data-timer.png`, fullPage: true })
+})
