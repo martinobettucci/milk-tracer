@@ -146,3 +146,6 @@ art-src/
 # Playwright screenshots (regenerated) & build output already covered
 /screenshots/
 /test-results/
+
+# Netlify local deploy state
+.netlify/
