@@ -48,21 +48,23 @@ export default function ActiveBottleCard({ feeds, timerMin }: Props) {
         </span>
       </div>
 
-      {/* safety timer bar */}
-      <div>
-        <div className="mb-1 flex items-center justify-between text-xs font-medium">
-          <span className={expired ? 'text-rose-500' : 'text-stone-500 dark:text-stone-300'}>
-            {expired ? t('ab_expired') : `${t('ab_expiresIn')} ${formatClock(msLeft)}`}
-          </span>
-          <span className="text-stone-400">
-            {formatDuration(elapsedMs)} / {timerMin}
-            {t('min')}
-          </span>
+      {/* safety timer bar — only meaningful while there's leftover to keep fresh */}
+      {remainingMl > 0 && (
+        <div>
+          <div className="mb-1 flex items-center justify-between text-xs font-medium">
+            <span className={expired ? 'text-rose-500' : 'text-stone-500 dark:text-stone-300'}>
+              {expired ? t('ab_expired') : `${t('ab_expiresIn')} ${formatClock(msLeft)}`}
+            </span>
+            <span className="text-stone-400">
+              {formatDuration(elapsedMs)} / {timerMin}
+              {t('min')}
+            </span>
+          </div>
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-stone-200 dark:bg-stone-800">
+            <div className={`h-full rounded-full transition-all ${bar}`} style={{ width: `${pct}%` }} />
+          </div>
         </div>
-        <div className="h-2.5 w-full overflow-hidden rounded-full bg-stone-200 dark:bg-stone-800">
-          <div className={`h-full rounded-full transition-all ${bar}`} style={{ width: `${pct}%` }} />
-        </div>
-      </div>
+      )}
 
       {/* reclaim / remaining */}
       {remainingMl <= 0 ? (
