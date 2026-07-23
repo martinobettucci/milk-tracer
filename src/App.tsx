@@ -8,6 +8,7 @@ import LogFeed from './components/LogFeed'
 import Dashboard from './components/Dashboard'
 import DataPanel from './components/DataPanel'
 import Wizard from './components/Wizard'
+import ReloadPrompt from './components/ReloadPrompt'
 
 type Tab = 'log' | 'stats' | 'data'
 const ONBOARDED_KEY = 'milk-tracer-onboarded'
@@ -119,6 +120,7 @@ export default function App() {
       </nav>
 
       {wizardOpen && <Wizard onClose={closeWizard} />}
+      <ReloadPrompt />
     </div>
   )
 }

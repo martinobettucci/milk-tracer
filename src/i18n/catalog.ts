@@ -32,6 +32,8 @@ export type StringKey =
   | 'wiz_guide' | 'wiz_skip' | 'wiz_back' | 'wiz_next' | 'wiz_done'
   | 'wiz1_t' | 'wiz1_b' | 'wiz2_t' | 'wiz2_b' | 'wiz3_t' | 'wiz3_b'
   | 'wiz4_t' | 'wiz4_b' | 'wiz5_t' | 'wiz5_b' | 'wiz6_t' | 'wiz6_b'
+  // app update prompt
+  | 'upd_title' | 'upd_body' | 'upd_cta' | 'upd_later'
 
 export type Catalog = Record<StringKey, string>
 
@@ -100,6 +102,9 @@ const en: Catalog = {
   wiz5_b: 'Daily totals, averages, waste rate, feeding-by-hour patterns and a smart suggestion for the next bottle size.',
   wiz6_t: 'Private & multilingual',
   wiz6_b: 'Works offline, installs to your home screen, speaks 24 EU languages and has a gentle dark mode. Your data never leaves your device.',
+  upd_title: 'New version available',
+  upd_body: 'A newer Milk Tracer has been deployed. Update to get the latest.',
+  upd_cta: 'Update', upd_later: 'Later',
 }
 
 const fr: Partial<Catalog> = {
@@ -152,6 +157,9 @@ const fr: Partial<Catalog> = {
   wiz5_b: 'Totaux journaliers, moyennes, taux de gaspillage, rythme par heure et une suggestion futée pour le prochain biberon.',
   wiz6_t: 'Privé et multilingue',
   wiz6_b: 'Fonctionne hors ligne, s’installe sur l’écran d’accueil, parle 24 langues de l’UE et propose un mode sombre. Vos données ne quittent jamais l’appareil.',
+  upd_title: 'Nouvelle version disponible',
+  upd_body: 'Une version plus récente de Milk Tracer est en ligne. Mettez à jour pour en profiter.',
+  upd_cta: 'Mettre à jour', upd_later: 'Plus tard',
 }
 
 const it: Partial<Catalog> = {
@@ -204,6 +212,9 @@ const it: Partial<Catalog> = {
   wiz5_b: 'Totali giornalieri, medie, tasso di spreco, ritmo per ora e un suggerimento intelligente per il prossimo biberon.',
   wiz6_t: 'Privato e multilingue',
   wiz6_b: 'Funziona offline, si installa sulla home, parla 24 lingue UE e ha una modalità scura. I tuoi dati non lasciano mai il dispositivo.',
+  upd_title: 'Nuova versione disponibile',
+  upd_body: 'È online una versione più recente di Milk Tracer. Aggiorna per averla.',
+  upd_cta: 'Aggiorna', upd_later: 'Più tardi',
 }
 
 const de: Partial<Catalog> = {
