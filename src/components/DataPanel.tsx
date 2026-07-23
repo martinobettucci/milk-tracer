@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../i18n'
 import { EU_LOCALES, LOCALE_NAMES, type Locale } from '../i18n/catalog'
 import { exportData, importData, clearAllFeeds, type BackupFile } from '../db/db'
 import type { ThemePref } from '../lib/theme'
 import { TIMER_OPTIONS } from '../lib/presets'
+import { ensurePersistentStorage, type PersistState } from '../lib/storage'
 
 interface Props {
   themePref: ThemePref
@@ -17,6 +18,11 @@ export default function DataPanel({ themePref, setTheme, timerMin, setTimerMin, 
   const { t, locale, setLocale, isAuto } = useI18n()
   const fileRef = useRef<HTMLInputElement>(null)
   const [msg, setMsg] = useState<string | null>(null)
+  const [persist, setPersist] = useState<PersistState>('best-effort')
+
+  useEffect(() => {
+    ensurePersistentStorage().then(setPersist)
+  }, [])
 
   const doExport = async () => {
     const data = await exportData(now)
@@ -44,6 +50,22 @@ export default function DataPanel({ themePref, setTheme, timerMin, setTimerMin, 
   return (
     <div className="mx-auto max-w-md space-y-4">
       <h2 className="text-lg font-bold">{t('data_title')}</h2>
+
+      {/* Storage durability */}
+      <div className="card space-y-1">
+        <div className="flex items-center gap-2 text-sm font-semibold">
+          <span
+            className={`inline-block h-2.5 w-2.5 rounded-full ${
+              persist === 'persisted' ? 'bg-emerald-500' : 'bg-amber-500'
+            }`}
+          />
+          {t('stor_title')}
+        </div>
+        <p className="text-xs text-stone-500 dark:text-stone-400">
+          {persist === 'persisted' ? t('stor_ok') : t('stor_risk')}
+        </p>
+        <p className="text-xs text-stone-400">{t('stor_backup')}</p>
+      </div>
 
       {/* Language */}
       <div className="card space-y-2">

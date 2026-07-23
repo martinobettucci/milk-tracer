@@ -34,6 +34,8 @@ export type StringKey =
   | 'wiz4_t' | 'wiz4_b' | 'wiz5_t' | 'wiz5_b' | 'wiz6_t' | 'wiz6_b'
   // app update prompt
   | 'upd_title' | 'upd_body' | 'upd_cta' | 'upd_later'
+  // storage durability
+  | 'stor_title' | 'stor_ok' | 'stor_risk' | 'stor_backup'
 
 export type Catalog = Record<StringKey, string>
 
@@ -105,6 +107,10 @@ const en: Catalog = {
   upd_title: 'New version available',
   upd_body: 'A newer Milk Tracer has been deployed. Update to get the latest.',
   upd_cta: 'Update', upd_later: 'Later',
+  stor_title: 'Your data',
+  stor_ok: 'Saved on this device — marked persistent, so updates won’t erase it.',
+  stor_risk: 'Saved on this device. Add the app to your home screen so the browser keeps it safe.',
+  stor_backup: 'Updates never delete your logs. Still, export a backup now and then.',
 }
 
 const fr: Partial<Catalog> = {
@@ -160,6 +166,10 @@ const fr: Partial<Catalog> = {
   upd_title: 'Nouvelle version disponible',
   upd_body: 'Une version plus récente de Milk Tracer est en ligne. Mettez à jour pour en profiter.',
   upd_cta: 'Mettre à jour', upd_later: 'Plus tard',
+  stor_title: 'Vos données',
+  stor_ok: 'Enregistrées sur cet appareil — marquées persistantes, les mises à jour ne les effacent pas.',
+  stor_risk: 'Enregistrées sur cet appareil. Ajoutez l’app à l’écran d’accueil pour que le navigateur les conserve.',
+  stor_backup: 'Les mises à jour n’effacent jamais vos données. Pensez tout de même à exporter une sauvegarde.',
 }
 
 const it: Partial<Catalog> = {
@@ -215,6 +225,10 @@ const it: Partial<Catalog> = {
   upd_title: 'Nuova versione disponibile',
   upd_body: 'È online una versione più recente di Milk Tracer. Aggiorna per averla.',
   upd_cta: 'Aggiorna', upd_later: 'Più tardi',
+  stor_title: 'I tuoi dati',
+  stor_ok: 'Salvati su questo dispositivo — contrassegnati come persistenti, gli aggiornamenti non li cancellano.',
+  stor_risk: 'Salvati su questo dispositivo. Aggiungi l’app alla schermata home così il browser li conserva.',
+  stor_backup: 'Gli aggiornamenti non cancellano mai i dati. Esporta comunque un backup ogni tanto.',
 }
 
 const de: Partial<Catalog> = {
