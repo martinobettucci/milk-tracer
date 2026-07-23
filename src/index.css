@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-cream-100 text-stone-700 antialiased;
+  margin: 0;
+}
+
+.dark body {
+  @apply bg-cream-950 text-stone-100;
+}
+
+/* Cozy AI-generated doodle wallpaper, whisper-soft behind everything. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/art/bg-pattern.webp');
+  background-size: 640px auto;
+  background-repeat: repeat;
+  opacity: 0.05;
+}
+.dark body::before {
+  opacity: 0.08;
+}
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* Respect notches on phones */
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl bg-cream-50 p-4 shadow-soft ring-1 ring-cream-200 dark:bg-cream-900 dark:ring-white/5;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition active:scale-[0.98] disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply btn bg-milk-500 text-white hover:bg-milk-600 shadow-soft;
+  }
+  .btn-ghost {
+    @apply btn bg-cream-200 text-stone-700 hover:bg-milk-100 dark:bg-white/5 dark:text-stone-200 dark:hover:bg-white/10;
+  }
+  .chip {
+    @apply flex flex-col items-center justify-center rounded-2xl border-2 border-cream-200 bg-cream-50 p-4 text-center font-semibold text-stone-700 transition hover:border-milk-400 hover:bg-milk-50 active:scale-[0.97] dark:border-white/10 dark:bg-cream-900 dark:text-stone-200 dark:hover:border-milk-500 dark:hover:bg-white/5;
+  }
+  .chip-active {
+    @apply border-milk-500 bg-milk-50 text-milk-700 dark:border-milk-400 dark:bg-milk-900/30 dark:text-milk-200;
+  }
+}
+
+/* Recharts: make text follow theme */
+.recharts-text {
+  @apply fill-stone-500 dark:fill-stone-400;
+}
+.recharts-cartesian-grid line {
+  @apply stroke-cream-200 dark:stroke-white/10;
+}

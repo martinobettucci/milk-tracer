@@ -1,0 +1,111 @@
+import { useRef, useState } from 'react'
+import { useI18n } from '../i18n'
+import { EU_LOCALES, LOCALE_NAMES, type Locale } from '../i18n/catalog'
+import { exportData, importData, clearAllFeeds, type BackupFile } from '../db/db'
+import type { ThemePref } from '../lib/theme'
+
+interface Props {
+  themePref: ThemePref
+  setTheme: (p: ThemePref) => void
+  now: number
+}
+
+export default function DataPanel({ themePref, setTheme, now }: Props) {
+  const { t, locale, setLocale, isAuto } = useI18n()
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [msg, setMsg] = useState<string | null>(null)
+
+  const doExport = async () => {
+    const data = await exportData(now)
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `milk-tracer-backup.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const doImport = async (file: File) => {
+    try {
+      const parsed = JSON.parse(await file.text()) as BackupFile
+      const n = await importData(parsed, 'replace')
+      setMsg(`${n} ${t('data_imported')}`)
+    } catch {
+      setMsg('⚠︎ ' + t('data_import'))
+    }
+  }
+
+  const themes: ThemePref[] = ['auto', 'light', 'dark']
+
+  return (
+    <div className="mx-auto max-w-md space-y-4">
+      <h2 className="text-lg font-bold">{t('data_title')}</h2>
+
+      {/* Language */}
+      <div className="card space-y-2">
+        <label className="text-sm font-medium text-stone-500">{t('data_language')}</label>
+        <select
+          className="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 dark:border-stone-700 dark:bg-stone-900"
+          value={isAuto ? 'auto' : locale}
+          onChange={(e) => setLocale(e.target.value === 'auto' ? 'auto' : (e.target.value as Locale))}
+          data-testid="language-select"
+        >
+          <option value="auto">🌍 {t('th_auto')}</option>
+          {EU_LOCALES.map((l) => (
+            <option key={l} value={l}>
+              {LOCALE_NAMES[l]}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Theme */}
+      <div className="card space-y-2">
+        <label className="text-sm font-medium text-stone-500">{t('data_theme')}</label>
+        <div className="grid grid-cols-3 gap-2">
+          {themes.map((th) => (
+            <button
+              key={th}
+              onClick={() => setTheme(th)}
+              className={`chip py-3 text-sm ${themePref === th ? 'chip-active' : ''}`}
+              data-testid={`theme-${th}`}
+            >
+              {th === 'auto' ? '🌗' : th === 'light' ? '☀️' : '🌙'}
+              <span className="mt-1">{t(th === 'auto' ? 'th_auto' : th === 'light' ? 'th_light' : 'th_dark')}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Backup */}
+      <div className="card space-y-3">
+        <p className="text-xs text-stone-400">{t('data_replaceNote')}</p>
+        <div className="grid grid-cols-2 gap-2">
+          <button className="btn-ghost" onClick={doExport}>
+            ⬇︎ {t('data_export')}
+          </button>
+          <button className="btn-ghost" onClick={() => fileRef.current?.click()}>
+            ⬆︎ {t('data_import')}
+          </button>
+        </div>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="application/json"
+          className="hidden"
+          onChange={(e) => e.target.files?.[0] && doImport(e.target.files[0])}
+        />
+        <button
+          className="btn w-full bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-950/40 dark:text-rose-300"
+          onClick={async () => {
+            if (confirm(t('data_confirmClear'))) await clearAllFeeds()
+          }}
+        >
+          🗑 {t('data_clear')}
+        </button>
+        {msg && <p className="text-center text-sm font-medium text-milk-600 dark:text-milk-300">{msg}</p>}
+      </div>
+    </div>
+  )
+}
