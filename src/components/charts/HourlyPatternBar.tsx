@@ -5,6 +5,7 @@ import { useI18n } from '../../i18n'
 import type { Feed } from '../../db/db'
 import { hourlyPattern } from '../../lib/stats'
 import { COLORS } from './palette'
+import { unit } from './format'
 import ChartCard, { ChartEmpty } from './ChartCard'
 
 export default function HourlyPatternBar({ feeds }: { feeds: Feed[] }) {
@@ -28,7 +29,7 @@ export default function HourlyPatternBar({ feeds }: { feeds: Feed[] }) {
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip
               labelFormatter={(h) => `${h}:00 – ${h}:59`}
-              formatter={(v: number) => `${v} ${t('ml')}`}
+              formatter={unit(t('ml'))}
             />
             <Bar dataKey="drunk" name={t('drunk')} fill={COLORS.line} radius={[3, 3, 0, 0]} isAnimationActive={false} />
           </BarChart>

@@ -1,6 +1,7 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 import { useI18n } from '../../i18n'
 import type { BreastStats } from '../../lib/stats'
+import { unit } from './format'
 import ChartCard, { ChartEmpty } from './ChartCard'
 
 const LEFT = '#f472b6' // warm pink
@@ -34,7 +35,7 @@ export default function BreastLeftRightPie({ stats }: { stats: BreastStats }) {
                 <Cell key={d.name} fill={d.color} />
               ))}
             </Pie>
-            <Tooltip formatter={(v: number) => `${v} ${t('min')}`} />
+            <Tooltip formatter={unit(t('min'))} />
             <Legend />
           </PieChart>
         </ResponsiveContainer>

@@ -3,6 +3,7 @@ import { useI18n } from '../../i18n'
 import type { Feed } from '../../db/db'
 import { sizeDistribution } from '../../lib/stats'
 import { CATEGORICAL } from './palette'
+import { unit } from './format'
 import ChartCard, { ChartEmpty } from './ChartCard'
 
 export default function SizeDistributionPie({ feeds }: { feeds: Feed[] }) {
@@ -29,7 +30,7 @@ export default function SizeDistributionPie({ feeds }: { feeds: Feed[] }) {
                 <Cell key={i} fill={CATEGORICAL[i % CATEGORICAL.length]} />
               ))}
             </Pie>
-            <Tooltip formatter={(v: number) => `${v} ${t('feeds')}`} />
+            <Tooltip formatter={unit(t('feeds'))} />
             <Legend />
           </PieChart>
         </ResponsiveContainer>

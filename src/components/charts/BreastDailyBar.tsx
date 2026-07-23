@@ -2,6 +2,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
 import { useI18n } from '../../i18n'
+import { unit } from './format'
 import ChartCard, { ChartEmpty } from './ChartCard'
 
 const PINK = '#ec4899'
@@ -23,7 +24,7 @@ export default function BreastDailyBar({
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="label" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip formatter={(v: number) => `${v} ${t('min')}`} />
+            <Tooltip formatter={unit(t('min'))} />
             <Bar dataKey="min" name={t('min')} fill={PINK} radius={[4, 4, 0, 0]} isAnimationActive={false} />
           </BarChart>
         </ResponsiveContainer>

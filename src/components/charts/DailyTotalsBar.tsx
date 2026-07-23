@@ -4,6 +4,7 @@ import {
 import { useI18n } from '../../i18n'
 import type { DayTotals } from '../../lib/stats'
 import { COLORS } from './palette'
+import { unit } from './format'
 import ChartCard, { ChartEmpty } from './ChartCard'
 
 export default function DailyTotalsBar({ days }: { days: DayTotals[] }) {
@@ -19,7 +20,7 @@ export default function DailyTotalsBar({ days }: { days: DayTotals[] }) {
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="label" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip formatter={(v: number) => `${v} ${t('ml')}`} />
+            <Tooltip formatter={unit(t('ml'))} />
             <Legend />
             <Bar dataKey="drunk" name={t('drunk')} stackId="a" fill={COLORS.drunk} radius={[0, 0, 0, 0]} isAnimationActive={false} />
             <Bar dataKey="wasted" name={t('wasted')} stackId="a" fill={COLORS.wasted} radius={[4, 4, 0, 0]} isAnimationActive={false} />

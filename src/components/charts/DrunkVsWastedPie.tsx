@@ -3,6 +3,7 @@ import { useI18n } from '../../i18n'
 import type { Feed } from '../../db/db'
 import { totals } from '../../lib/stats'
 import { COLORS } from './palette'
+import { unit } from './format'
 import ChartCard, { ChartEmpty } from './ChartCard'
 
 export default function DrunkVsWastedPie({ feeds }: { feeds: Feed[] }) {
@@ -35,7 +36,7 @@ export default function DrunkVsWastedPie({ feeds }: { feeds: Feed[] }) {
                 <Cell key={d.name} fill={d.color} />
               ))}
             </Pie>
-            <Tooltip formatter={(v: number) => `${v} ${t('ml')}`} />
+            <Tooltip formatter={unit(t('ml'))} />
             <Legend />
           </PieChart>
         </ResponsiveContainer>

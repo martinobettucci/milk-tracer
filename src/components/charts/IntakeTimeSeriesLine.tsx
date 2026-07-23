@@ -5,6 +5,7 @@ import { useI18n } from '../../i18n'
 import type { Feed } from '../../db/db'
 import { bottleFeeds } from '../../lib/stats'
 import { COLORS } from './palette'
+import { unit } from './format'
 import ChartCard, { ChartEmpty } from './ChartCard'
 import { fmtDateTime } from '../../lib/format'
 
@@ -34,7 +35,7 @@ export default function IntakeTimeSeriesLine({ feeds }: { feeds: Feed[] }) {
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip
               labelFormatter={(ts) => fmtDateTime(Number(ts), locale)}
-              formatter={(v: number) => `${v} ${t('ml')}`}
+              formatter={unit(t('ml'))}
             />
             <Line
               type="monotone"
