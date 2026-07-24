@@ -3,7 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db, setSetting } from './db/db'
 import { useI18n } from './i18n'
 import { useTheme } from './lib/theme'
-import { DEFAULT_TIMER_MIN } from './lib/presets'
+import { DEFAULT_TIMER_MIN, DEFAULT_BREAST_FLOW, flowMlPerMin, type BreastFlow } from './lib/presets'
 import LogFeed from './components/LogFeed'
 import Dashboard from './components/Dashboard'
 import DataPanel from './components/DataPanel'
@@ -32,6 +32,10 @@ export default function App() {
   const timerSetting = useLiveQuery(() => db.settings.get('bottleTimerMin'), [])
   const timerMin = timerSetting?.value ? Number(timerSetting.value) : DEFAULT_TIMER_MIN
   const setTimerMin = (m: number) => setSetting('bottleTimerMin', String(m))
+
+  const flowSetting = useLiveQuery(() => db.settings.get('breastFlow'), [])
+  const breastFlow = (flowSetting?.value as BreastFlow) || DEFAULT_BREAST_FLOW
+  const setBreastFlow = (f: BreastFlow) => setSetting('breastFlow', f)
 
   // Keep "now" fresh so the recommendation clock stays sensible.
   useEffect(() => {
@@ -71,12 +75,22 @@ export default function App() {
 
       {/* Content */}
       <main className="px-4 py-5">
-        {tab === 'log' && <LogFeed key={logSession} now={now} onLogged={() => undefined} />}
+        {tab === 'log' && (
+          <LogFeed key={logSession} now={now} breastMlPerMin={flowMlPerMin(breastFlow)} onLogged={() => undefined} />
+        )}
         {tab === 'stats' && (
           <Dashboard feeds={feeds ?? []} now={now} timerMin={timerMin} onGoLog={() => openTab('log')} />
         )}
         {tab === 'data' && (
-          <DataPanel themePref={pref} setTheme={setTheme} timerMin={timerMin} setTimerMin={setTimerMin} now={now} />
+          <DataPanel
+            themePref={pref}
+            setTheme={setTheme}
+            timerMin={timerMin}
+            setTimerMin={setTimerMin}
+            breastFlow={breastFlow}
+            setBreastFlow={setBreastFlow}
+            now={now}
+          />
         )}
 
         {/* Studio credit */}

@@ -2,7 +2,7 @@ import { useI18n } from '../i18n'
 import type { Feed } from '../db/db'
 import {
   dailyTotals, todayTotals, avgPerDrink, avgIntervalMs, wastePercent, totals, recommend,
-  formatDuration, bottleFeeds,
+  formatDuration, bottleFeeds, breastStats,
 } from '../lib/stats'
 import { fmtNum } from '../lib/format'
 import StatCard from './StatCard'
@@ -44,6 +44,9 @@ export default function Dashboard({ feeds, now, timerMin, onGoLog }: Props) {
   const days = dailyTotals(feeds, locale)
   const rec = recommend(feeds, now)
   const all = totals(feeds)
+  const breast = breastStats(feeds, now)
+  const estNote =
+    breast.totalEstMl > 0 ? `${fmtNum(breast.totalEstMl, locale)} ${t('ml')} ${t('bs_est')}` : undefined
 
   return (
     <div className="mx-auto max-w-3xl space-y-4">
@@ -77,7 +80,7 @@ export default function Dashboard({ feeds, now, timerMin, onGoLog }: Props) {
           {/* Grand totals */}
           <div className="grid grid-cols-3 gap-3">
             <StatCard label={t('prepared')} value={fmtNum(all.prepared, locale)} unit={t('ml')} accent="slate" />
-            <StatCard label={t('totalDrunk')} value={fmtNum(all.drunk, locale)} unit={t('ml')} accent="green" />
+            <StatCard label={t('totalDrunk')} value={fmtNum(all.drunk, locale)} unit={t('ml')} accent="green" note={estNote} />
             <StatCard label={t('wasted')} value={fmtNum(all.wasted, locale)} unit={t('ml')} accent="amber" />
           </div>
         </div>

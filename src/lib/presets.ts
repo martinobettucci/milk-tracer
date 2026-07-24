@@ -38,3 +38,17 @@ export const BREAST_MAX_MIN = 120
 export const TIMER_OPTIONS = [30, 60, 90, 120] as const
 export type TimerMinutes = (typeof TIMER_OPTIONS)[number]
 export const DEFAULT_TIMER_MIN: TimerMinutes = 60
+
+// Breast-feeding intake estimate (ml per minute at the breast). You can't
+// measure it directly; studies put a session (~12–67 min) at ~54–234 ml, i.e.
+// roughly 3–6 ml/min on average. Each feed freezes the rate it was logged at.
+export type BreastFlow = 'low' | 'medium' | 'high'
+export const BREAST_FLOW_ML_PER_MIN: Record<BreastFlow, number> = {
+  low: 3,
+  medium: 4,
+  high: 6,
+}
+export const BREAST_FLOW_OPTIONS: BreastFlow[] = ['low', 'medium', 'high']
+export const DEFAULT_BREAST_FLOW: BreastFlow = 'medium'
+export const DEFAULT_BREAST_ML_PER_MIN = BREAST_FLOW_ML_PER_MIN[DEFAULT_BREAST_FLOW]
+export const flowMlPerMin = (f: BreastFlow): number => BREAST_FLOW_ML_PER_MIN[f]

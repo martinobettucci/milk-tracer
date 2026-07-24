@@ -6,6 +6,7 @@ import {
   type BreastSide, type Fraction,
 } from '../lib/presets'
 import { fmtDateTime, toLocalInput, fromLocalInput } from '../lib/format'
+import { breastEstMl } from '../lib/stats'
 
 export default function FeedTable({ feeds }: { feeds: Feed[] }) {
   const { t, locale } = useI18n()
@@ -54,7 +55,9 @@ export default function FeedTable({ feeds }: { feeds: Feed[] }) {
                       <td className="px-3 py-2 font-semibold text-milk-600 tabular-nums dark:text-milk-300">
                         {f.durationMin} {t('min')}
                       </td>
-                      <td className="px-3 py-2 text-stone-300 dark:text-stone-600">—</td>
+                      <td className="px-3 py-2 text-xs text-stone-400 tabular-nums">
+                        ~{breastEstMl(f)} {t('ml')} {t('bs_est')}
+                      </td>
                     </>
                   ) : (
                     <>

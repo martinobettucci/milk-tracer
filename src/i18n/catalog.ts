@@ -36,6 +36,9 @@ export type StringKey =
   | 'upd_title' | 'upd_body' | 'upd_cta' | 'upd_later'
   // storage durability
   | 'stor_title' | 'stor_ok' | 'stor_risk' | 'stor_backup'
+  // breast intake estimate
+  | 'bs_estTitle' | 'bs_estToday' | 'bs_estTotal' | 'bs_est' | 'bs_estNote'
+  | 'data_flow' | 'data_flowHint' | 'flow_low' | 'flow_medium' | 'flow_high' | 'perMin'
 
 export type Catalog = Record<StringKey, string>
 
@@ -111,6 +114,12 @@ const en: Catalog = {
   stor_ok: 'Saved on this device — marked persistent, so updates won’t erase it.',
   stor_risk: 'Saved on this device. Add the app to your home screen so the browser keeps it safe.',
   stor_backup: 'Updates never delete your logs. Still, export a backup now and then.',
+  bs_estTitle: 'Estimated intake', bs_estToday: 'Est. today', bs_estTotal: 'Est. total',
+  bs_est: 'est.',
+  bs_estNote: 'Breast intake can’t be measured — this is a rough estimate from time × your chosen flow.',
+  data_flow: 'Breast intake estimate',
+  data_flowHint: 'Approx. ml drunk per minute at the breast. Frozen on each feed, so changing it never alters past sessions.',
+  flow_low: 'Low', flow_medium: 'Medium', flow_high: 'High', perMin: 'ml/min',
 }
 
 const fr: Partial<Catalog> = {
@@ -170,6 +179,12 @@ const fr: Partial<Catalog> = {
   stor_ok: 'Enregistrées sur cet appareil — marquées persistantes, les mises à jour ne les effacent pas.',
   stor_risk: 'Enregistrées sur cet appareil. Ajoutez l’app à l’écran d’accueil pour que le navigateur les conserve.',
   stor_backup: 'Les mises à jour n’effacent jamais vos données. Pensez tout de même à exporter une sauvegarde.',
+  bs_estTitle: 'Consommation estimée', bs_estToday: 'Est. aujourd’hui', bs_estTotal: 'Est. total',
+  bs_est: 'est.',
+  bs_estNote: 'La quantité au sein ne se mesure pas — estimation approximative selon le temps × le débit choisi.',
+  data_flow: 'Estimation au sein',
+  data_flowHint: 'ml bus par minute au sein (approx.). Figé sur chaque tétée : le changer ne modifie jamais les tétées passées.',
+  flow_low: 'Faible', flow_medium: 'Moyen', flow_high: 'Élevé', perMin: 'ml/min',
 }
 
 const it: Partial<Catalog> = {
@@ -229,6 +244,12 @@ const it: Partial<Catalog> = {
   stor_ok: 'Salvati su questo dispositivo — contrassegnati come persistenti, gli aggiornamenti non li cancellano.',
   stor_risk: 'Salvati su questo dispositivo. Aggiungi l’app alla schermata home così il browser li conserva.',
   stor_backup: 'Gli aggiornamenti non cancellano mai i dati. Esporta comunque un backup ogni tanto.',
+  bs_estTitle: 'Assunzione stimata', bs_estToday: 'Stima oggi', bs_estTotal: 'Stima totale',
+  bs_est: 'stim.',
+  bs_estNote: 'La quantità al seno non è misurabile — stima approssimativa da tempo × flusso scelto.',
+  data_flow: 'Stima al seno',
+  data_flowHint: 'ml bevuti al minuto al seno (circa). Fissato su ogni poppata: modificarlo non cambia mai le poppate passate.',
+  flow_low: 'Basso', flow_medium: 'Medio', flow_high: 'Alto', perMin: 'ml/min',
 }
 
 const de: Partial<Catalog> = {

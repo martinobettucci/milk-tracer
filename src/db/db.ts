@@ -17,6 +17,7 @@ export interface Feed {
   // --- breast fields ---
   side?: BreastSide
   durationMin?: number // minutes, in 15-min slots
+  mlPerMin?: number // intake-estimate rate frozen at log time (breast only)
 }
 
 export interface Setting {
@@ -47,6 +48,21 @@ export class MilkTracerDB extends Dexie {
           .toCollection()
           .modify((f: Feed) => {
             if (!f.kind) f.kind = 'bottle'
+          })
+      })
+    // v3 — freeze an intake-estimate rate on existing breast feeds so changing
+    // the setting later never rewrites past records. 4 ml/min = default medium.
+    this.version(3)
+      .stores({
+        feeds: '++id, timestamp, kind',
+        settings: 'key',
+      })
+      .upgrade(async (tx) => {
+        await tx
+          .table('feeds')
+          .toCollection()
+          .modify((f: Feed) => {
+            if (f.kind === 'breast' && f.mlPerMin == null) f.mlPerMin = 4
           })
       })
   }
@@ -120,12 +136,14 @@ export async function addBreastFeed(input: {
   timestamp: number
   side: BreastSide
   durationMin: number
+  mlPerMin: number // frozen intake-estimate rate at log time
 }): Promise<number> {
   return db.feeds.add({
     kind: 'breast',
     timestamp: input.timestamp,
     side: input.side,
     durationMin: input.durationMin,
+    mlPerMin: input.mlPerMin,
   })
 }
 

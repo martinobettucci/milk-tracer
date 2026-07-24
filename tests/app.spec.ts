@@ -21,6 +21,7 @@ type Row = {
   wastedMl?: number
   side?: string
   durationMin?: number
+  mlPerMin?: number
 }
 const feeds = (page: Page): Promise<Row[]> =>
   page.evaluate(() => {
@@ -145,6 +146,27 @@ test('breast feeding shows up in its stats section', async ({ page }) => {
   await expect(page.getByTestId('breast-section')).toBeVisible()
   // avg per session = (30 + 15) / 2 = ~23 min
   await expect(page.getByTestId('breast-section')).toContainText(/23\s*m/)
+})
+
+test('breast intake estimate freezes the flow rate per feed', async ({ page }) => {
+  await fresh(page)
+
+  // High flow (6 ml/min) → this session should freeze at 6.
+  await page.getByTestId('nav-data').click()
+  await page.getByTestId('flow-high').click()
+  await logBreast(page, 'left', 30)
+
+  // Change to Low (3 ml/min) → only the NEXT session uses 3.
+  await page.getByTestId('nav-data').click()
+  await page.getByTestId('flow-low').click()
+  await logBreast(page, 'right', 30)
+
+  const rows = await feeds(page)
+  expect(rows.map((r) => r.mlPerMin)).toEqual([6, 3]) // first stays 6 after the change
+
+  // 30×6 + 30×3 = 180 + 90 = 270 ml estimated total.
+  await page.getByTestId('nav-stats').click()
+  await expect(page.getByTestId('breast-section')).toContainText('270')
 })
 
 test('safety-timer setting persists across reloads', async ({ page }) => {

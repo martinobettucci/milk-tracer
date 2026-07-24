@@ -1,6 +1,7 @@
 import { useI18n } from '../i18n'
 import type { Feed } from '../db/db'
 import { breastStats, breastDaily, formatMinutes, formatDuration } from '../lib/stats'
+import { fmtNum } from '../lib/format'
 import StatCard from './StatCard'
 import BreastLeftRightPie from './charts/BreastLeftRightPie'
 import BreastDailyBar from './charts/BreastDailyBar'
@@ -24,10 +25,29 @@ export default function BreastSection({ feeds, now }: Props) {
         {t('bs_title')}
       </h2>
 
+      {/* estimated intake (from time × frozen flow rate) */}
+      <div className="grid grid-cols-2 gap-3">
+        <StatCard
+          label={`${t('bs_estTitle')} · ${t('today')}`}
+          value={`~${fmtNum(s.todayEstMl, locale)}`}
+          unit={t('ml')}
+          accent="milk"
+          icon="🤱"
+        />
+        <StatCard
+          label={`${t('bs_estTitle')} · ${t('bs_estTotal')}`}
+          value={`~${fmtNum(s.totalEstMl, locale)}`}
+          unit={t('ml')}
+          accent="milk"
+        />
+      </div>
+      <p className="px-1 text-xs text-stone-400">{t('bs_estNote')}</p>
+
+      {/* time-based stats */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label={`${t('bs_today')}`} value={formatMinutes(s.todayMin)} accent="milk" icon="🤱" />
-        <StatCard label={t('bs_avgFlow')} value={formatMinutes(s.avgDurationMin)} accent="milk" icon="📊" />
-        <StatCard label={t('bs_total')} value={formatMinutes(s.totalMin)} accent="slate" icon="⏳" />
+        <StatCard label={t('bs_today')} value={formatMinutes(s.todayMin)} accent="slate" icon="⏳" />
+        <StatCard label={t('bs_avgFlow')} value={formatMinutes(s.avgDurationMin)} accent="slate" icon="📊" />
+        <StatCard label={t('bs_total')} value={formatMinutes(s.totalMin)} accent="slate" icon="Σ" />
         <StatCard label={t('bs_avgFreq')} value={formatDuration(s.avgIntervalMs)} accent="slate" icon="⏱" />
       </div>
 

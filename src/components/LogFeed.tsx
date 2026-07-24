@@ -12,10 +12,11 @@ type Step = 'type' | 'size' | 'fraction' | 'side' | 'duration' | 'done'
 
 interface Props {
   now: number
+  breastMlPerMin: number
   onLogged?: () => void
 }
 
-export default function LogFeed({ now, onLogged }: Props) {
+export default function LogFeed({ now, breastMlPerMin, onLogged }: Props) {
   const { t } = useI18n()
   const [step, setStep] = useState<Step>('type')
   const [choice, setChoice] = useState<Choice | null>(null)
@@ -45,7 +46,7 @@ export default function LogFeed({ now, onLogged }: Props) {
 
   const saveBreast = async () => {
     if (!side) return
-    await addBreastFeed({ timestamp: when, side, durationMin })
+    await addBreastFeed({ timestamp: when, side, durationMin, mlPerMin: breastMlPerMin })
     setStep('done')
     onLogged?.()
   }

@@ -3,7 +3,7 @@ import { useI18n } from '../i18n'
 import { EU_LOCALES, LOCALE_NAMES, type Locale } from '../i18n/catalog'
 import { exportData, importData, clearAllFeeds, type BackupFile } from '../db/db'
 import type { ThemePref } from '../lib/theme'
-import { TIMER_OPTIONS } from '../lib/presets'
+import { TIMER_OPTIONS, BREAST_FLOW_OPTIONS, BREAST_FLOW_ML_PER_MIN, type BreastFlow } from '../lib/presets'
 import { ensurePersistentStorage, type PersistState } from '../lib/storage'
 
 interface Props {
@@ -11,10 +11,14 @@ interface Props {
   setTheme: (p: ThemePref) => void
   timerMin: number
   setTimerMin: (m: number) => void
+  breastFlow: BreastFlow
+  setBreastFlow: (f: BreastFlow) => void
   now: number
 }
 
-export default function DataPanel({ themePref, setTheme, timerMin, setTimerMin, now }: Props) {
+export default function DataPanel({
+  themePref, setTheme, timerMin, setTimerMin, breastFlow, setBreastFlow, now,
+}: Props) {
   const { t, locale, setLocale, isAuto } = useI18n()
   const fileRef = useRef<HTMLInputElement>(null)
   const [msg, setMsg] = useState<string | null>(null)
@@ -102,6 +106,27 @@ export default function DataPanel({ themePref, setTheme, timerMin, setTimerMin, 
           ))}
         </div>
         <p className="text-xs text-stone-400">{t('data_timerHint')}</p>
+      </div>
+
+      {/* Breast intake estimate */}
+      <div className="card space-y-2">
+        <label className="text-sm font-medium text-stone-500">🤱 {t('data_flow')}</label>
+        <div className="grid grid-cols-3 gap-2">
+          {BREAST_FLOW_OPTIONS.map((f) => (
+            <button
+              key={f}
+              onClick={() => setBreastFlow(f)}
+              className={`chip py-3 text-sm ${breastFlow === f ? 'chip-active' : ''}`}
+              data-testid={`flow-${f}`}
+            >
+              {t(f === 'low' ? 'flow_low' : f === 'medium' ? 'flow_medium' : 'flow_high')}
+              <span className="text-xs font-normal text-stone-400">
+                {BREAST_FLOW_ML_PER_MIN[f]} {t('perMin')}
+              </span>
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-stone-400">{t('data_flowHint')}</p>
       </div>
 
       {/* Theme */}

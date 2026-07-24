@@ -1,6 +1,6 @@
 import { startOfDay, format } from 'date-fns'
 import type { Feed } from '../db/db'
-import { ALL_SIZES } from './presets'
+import { ALL_SIZES, DEFAULT_BREAST_ML_PER_MIN } from './presets'
 
 export interface DayTotals {
   day: string // yyyy-MM-dd
@@ -32,6 +32,13 @@ export interface BreastStats {
   rightCount: number
   leftMin: number
   rightMin: number
+  totalEstMl: number // estimated intake, using each feed's frozen rate
+  todayEstMl: number
+}
+
+/** Estimated ml drunk at a breast session, using its frozen rate. */
+export function breastEstMl(feed: Feed): number {
+  return Math.round((feed.durationMin ?? 0) * (feed.mlPerMin ?? DEFAULT_BREAST_ML_PER_MIN))
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000
@@ -209,11 +216,16 @@ export function breastStats(feeds: Feed[], now: number): BreastStats {
   let rightCount = 0
   let leftMin = 0
   let rightMin = 0
+  let totalEstMl = 0
+  let todayEstMl = 0
   for (const f of bf) {
     const min = f.durationMin ?? 0
+    const est = breastEstMl(f)
     totalMin += min
+    totalEstMl += est
     if (format(startOfDay(f.timestamp), 'yyyy-MM-dd') === today) {
       todayMin += min
+      todayEstMl += est
       todayCount += 1
     }
     if (f.side === 'left') {
@@ -235,6 +247,8 @@ export function breastStats(feeds: Feed[], now: number): BreastStats {
     rightCount,
     leftMin,
     rightMin,
+    totalEstMl,
+    todayEstMl,
   }
 }
 
